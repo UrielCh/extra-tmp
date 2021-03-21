@@ -1,6 +1,8 @@
 'use strict'
 
-const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
+import Puppeteer from 'puppeteer'
+import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
+import { EventEmitter } from 'events';
 
 /**
  * Stealth mode: Applies various techniques to make detection of headless puppeteer harder. 💯
@@ -150,14 +152,14 @@ class StealthPlugin extends PuppeteerExtraPlugin {
   /**
    * @private
    */
-  set enabledEvasions(evasions) {
+  set enabledEvasions(evasions: Set<string>) {
     this.opts.enabledEvasions = evasions
   }
 
-  async onBrowser(browser) {
-    if (browser && browser.setMaxListeners) {
+  async onBrowser(browser: Puppeteer.Browser) {
+    if (browser && (browser as any as EventEmitter).setMaxListeners) {
       // Increase event emitter listeners to prevent MaxListenersExceededWarning
-      browser.setMaxListeners(30)
+      (browser as any as EventEmitter).setMaxListeners(30)
     }
   }
 }
@@ -168,7 +170,7 @@ class StealthPlugin extends PuppeteerExtraPlugin {
  * @param {Object} [opts] - Options
  * @param {Set<string>} [opts.enabledEvasions] - Specify which evasions to use (by default all)
  */
-const defaultExport = opts => new StealthPlugin(opts)
+const defaultExport = (opts?: {enabledEvasions?: Set<String>}) => new StealthPlugin(opts)
 module.exports = defaultExport
 
 // const moduleExport = defaultExport
