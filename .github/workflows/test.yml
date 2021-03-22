@@ -47,8 +47,9 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
 
-      - name: 'Fix for: error fsevents@2.1.2: The platform "linux" is incompatible with this module.'
-        run: npx json -I -f package.json -e 'this.resolutions={}'
+      #- name: 'Fix for: error fsevents@2.1.2: The platform "linux" is incompatible with this module.'
+      #  run: npx json -I -f package.json -e 'this.resolutions={}'
+      #      npx json -I -f package.json -e 'this.resolutions={"**/fsevents": "^2.1.2"}' 
 
       - name: yarn install
         uses: bahmutov/npm-install@v1
