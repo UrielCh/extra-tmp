@@ -8258,7 +8258,7 @@ puppeteer-firefox@^0.5.0:
     rimraf "^2.6.1"
     ws "^6.1.0"
 
-puppeteer@^8.0.0:
+puppeteer@*, puppeteer@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/puppeteer/-/puppeteer-8.0.0.tgz#a236669118aa795331c2d0ca19877159e7664705"
   integrity sha512-D0RzSWlepeWkxPPdK3xhTcefj8rjah1791GE82Pdjsri49sy11ci/JQsAO8K2NRukqvwEtcI+ImP5F4ZiMvtIQ==
