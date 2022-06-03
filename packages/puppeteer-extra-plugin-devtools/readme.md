@@ -12,10 +12,10 @@ yarn add puppeteer-extra-plugin-devtools
 
 **Make puppeteer browser debugging possible from anywhere.**
 
--   Creates a secure tunnel to make the devtools frontend (**incl. screencasting**) accessible from the public internet
--   Works for both headless and headful puppeteer instances, as well as within docker containers
--   Uses the already existing DevTools Protocol websocket connection from puppeteer
--   Features some convenience functions for using the devtools frontend locally
+- Creates a secure tunnel to make the devtools frontend (**incl. screencasting**) accessible from the public internet
+- Works for both headless and headful puppeteer instances, as well as within docker containers
+- Uses the already existing DevTools Protocol websocket connection from puppeteer
+- Features some convenience functions for using the devtools frontend locally
 
 ## Magic
 
@@ -28,15 +28,16 @@ const puppeteer = require('puppeteer-extra')
 const devtools = require('puppeteer-extra-plugin-devtools')()
 puppeteer.use(devtools)
 
-puppeteer.launch().then(async browser => {
-  const tunnel = await devtools.createTunnel(browser)
-  console.log(tunnel.url) // => https://devtools-tunnel-sdoqqj95vg.localtunnel.me
-
-  const page = await browser.newPage()
-  await page.goto('https://www.google.com')
-  await page.waitForTimeout(60 * 1000)
-  browser.close()
-})
+puppeteer
+  .launch({ headless: true, defaultViewport: null })
+  .then(async browser => {
+    console.log('Start')
+    const tunnel = await devtools.createTunnel(browser)
+    console.log(tunnel.url)
+    const page = await browser.newPage()
+    await page.goto('https://example.com')
+    console.log('All setup.')
+  })
 ```
 
 ## API
@@ -45,14 +46,21 @@ puppeteer.launch().then(async browser => {
 
 #### Table of Contents
 
--   [Plugin](#plugin)
-    -   [createTunnel](#createtunnel)
-    -   [setAuthCredentials](#setauthcredentials)
-    -   [getLocalDevToolsUrl](#getlocaldevtoolsurl)
--   [Tunnel](#tunnel)
-    -   [url](#url)
-    -   [getUrlForPage](#geturlforpage)
-    -   [close](#close)
+- [puppeteer-extra-plugin-devtools](#puppeteer-extra-plugin-devtools)
+  - [Installation](#installation)
+  - [Purpose](#purpose)
+  - [Magic](#magic)
+  - [Quickstart](#quickstart)
+  - [API](#api)
+      - [Table of Contents](#table-of-contents)
+    - [Plugin](#plugin)
+      - [createTunnel](#createtunnel)
+      - [setAuthCredentials](#setauthcredentials)
+      - [getLocalDevToolsUrl](#getlocaldevtoolsurl)
+    - [Tunnel](#tunnel)
+      - [url](#url)
+      - [getUrlForPage](#geturlforpage)
+      - [close](#close)
 
 ### [Plugin](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L34-L168)
 
@@ -69,12 +77,12 @@ generate a password and print it to STDOUT.
 
 Type: `function (opts)`
 
--   `opts` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options (optional, default `{}`)
-    -   `opts.auth` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Basic auth credentials for the public page
-        -   `opts.auth.user` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Username (default: 'user')
-        -   `opts.auth.pass` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Password (will be generated if not provided)
-    -   `opts.prefix` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** The prefix to use for the localtunnel.me subdomain (default: 'devtools-tunnel')
-    -   `opts.localtunnel` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Advanced options to pass to [localtunnel](https://github.com/localtunnel/localtunnel#options)
+- `opts` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options (optional, default `{}`)
+  - `opts.auth` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Basic auth credentials for the public page
+    - `opts.auth.user` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Username (default: 'user')
+    - `opts.auth.pass` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)?** Password (will be generated if not provided)
+  - `opts.prefix` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** The prefix to use for the localtunnel.me subdomain (default: 'devtools-tunnel')
+  - `opts.localtunnel` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)?** Advanced options to pass to [localtunnel](https://github.com/localtunnel/localtunnel#options)
 
 Example:
 
@@ -91,7 +99,7 @@ puppeteer.launch().then(async browser => {
 })
 ```
 
-* * *
+---
 
 #### [createTunnel](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L82-L93)
 
@@ -101,7 +109,7 @@ Supports multiple browser instances (will create a new tunnel for each).
 
 Type: `function (browser): Tunnel`
 
--   `browser` **Puppeteer.Browser** The browser to create the tunnel for (there can be multiple)
+- `browser` **Puppeteer.Browser** The browser to create the tunnel for (there can be multiple)
 
 Example:
 
@@ -126,7 +134,7 @@ puppeteer.use(devtools)
 // Browser 2's devtools frontend can be found at: https://devtools-tunnel-pp83sdi4jo.localtunnel.me
 ```
 
-* * *
+---
 
 #### [setAuthCredentials](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L113-L119)
 
@@ -136,8 +144,8 @@ Alternatively the credentials can be defined when instantiating the plugin.
 
 Type: `function (user, pass)`
 
--   `user` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Username
--   `pass` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Password
+- `user` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Username
+- `pass` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** Password
 
 Example:
 
@@ -175,7 +183,7 @@ puppeteer.launch().then(async browser => {
 })
 ```
 
-* * *
+---
 
 ### [Tunnel](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L174-L217)
 
@@ -185,10 +193,10 @@ The devtools tunnel for a browser instance.
 
 Type: `function (wsEndpoint, opts)`
 
--   `wsEndpoint`  
--   `opts`   (optional, default `{}`)
+- `wsEndpoint`
+- `opts` (optional, default `{}`)
 
-* * *
+---
 
 #### [url](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L187-L187)
 
@@ -204,7 +212,7 @@ console.log(tunnel.url)
 // => https://devtools-tunnel-sdoqqj95vg.localtunnel.me
 ```
 
-* * *
+---
 
 #### [getUrlForPage](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L201-L205)
 
@@ -212,7 +220,7 @@ Get the devtools frontend deep link for a specific page.
 
 Type: `function (page): string`
 
--   `page` **Puppeteer.Page** 
+- `page` **Puppeteer.Page**
 
 Example:
 
@@ -223,7 +231,7 @@ console.log(tunnel.getUrlForPage(page))
 // => https://devtools-tunnel-bmkjg26zmr.localtunnel.me/devtools/inspector.html?ws(...)
 ```
 
-* * *
+---
 
 #### [close](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L216-L216)
 

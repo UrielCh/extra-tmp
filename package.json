@@ -17,9 +17,17 @@
     "prepare": "lerna run prepare",
     "release": "lerna publish --npm-client npm"
   },
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/@types",
+      "**/@types/**",
+      "**/typescript",
+      "**/typescript/**"
+    ]
+  },
   "devDependencies": {
     "chalk": "^4.1.0",
     "eslint": "^6.7.1",

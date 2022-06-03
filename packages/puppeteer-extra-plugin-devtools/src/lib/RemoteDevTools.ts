@@ -202,6 +202,14 @@ export class DevToolsTunnel extends DevToolsCommon {
       return
     }
     body = body.replace(`fetch(url).`, `fetch(url, {credentials: 'include'}).`)
+
+    // Fix for headless index pages that use weird client-side JS to modify the devtoolsFrontendUrl to something not working for us
+    // https://github.com/berstend/puppeteer-extra/issues/566
+    body = body.replace(
+      'link.href = `https://chrome-devtools-frontend.appspot.com',
+      'link.href = item.devtoolsFrontendUrl; // '
+    )
+
     debug('fetch:after', body)
     return body
   }
@@ -270,6 +278,10 @@ export class DevToolsTunnel extends DevToolsCommon {
       debug('tunnel:close')
     })
 
+    tunnel.on('error', err => {
+      console.log('tunnel error', err)
+    })
+    
     debug('tunnel:created', tunnel.url)
     return tunnel
   }
