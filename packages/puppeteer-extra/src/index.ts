@@ -1,11 +1,24 @@
-import * as Puppeteer from './puppeteer'
+/// <reference path="./puppeteer-legacy.d.ts" />
+import { PuppeteerNode, Browser, Page } from 'puppeteer'
 
 import Debug from 'debug'
 const debug = Debug('puppeteer-extra')
 
 import merge from 'deepmerge'
 
-export { AllLaunchOptions, VanillaPuppeteer, VanillaPuppeteerNode } from './puppeteer';
+/**
+ * Original Puppeteer API
+ * @private
+ */
+export interface VanillaPuppeteer
+  extends Pick<
+    PuppeteerNode,
+    | 'connect'
+    | 'defaultArgs'
+    | 'executablePath'
+    | 'launch'
+    | 'createBrowserFetcher'
+  > {}
 
 /**
  * Minimal plugin interface
@@ -20,8 +33,8 @@ export interface PuppeteerExtraPlugin {
  * We need to hook into non-public APIs in rare occasions to fix puppeteer bugs. :(
  * @private
  */
-interface BrowserInternals extends Puppeteer.Browser {
-  _createPageInContext(contextId?: string): Promise<Puppeteer.Page>
+interface BrowserInternals extends Browser {
+  _createPageInContext(contextId?: string): Promise<Page>
 }
 
 /**
@@ -47,11 +60,11 @@ interface BrowserInternals extends Puppeteer.Browser {
  *   await browser.close()
  * })()
  */
-export class PuppeteerExtra implements Puppeteer.VanillaPuppeteer {
+export class PuppeteerExtra implements VanillaPuppeteer {
   private _plugins: PuppeteerExtraPlugin[] = []
 
   constructor(
-    private _pptr?: Puppeteer.VanillaPuppeteer,
+    private _pptr?: VanillaPuppeteer,
     private _requireError?: Error
   ) {}
 
@@ -96,9 +109,9 @@ export class PuppeteerExtra implements Puppeteer.VanillaPuppeteer {
    *
    * @private
    */
-  get pptr(): Puppeteer.VanillaPuppeteerNode {
+  get pptr(): VanillaPuppeteer {
     if (this._pptr) {
-      return this._pptr as Puppeteer.VanillaPuppeteerNode
+      return this._pptr
     }
 
     // Whoopsie
@@ -133,7 +146,9 @@ export class PuppeteerExtra implements Puppeteer.VanillaPuppeteer {
    *
    * @param options - See [puppeteer docs](https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
    */
-  async launch(options?: Puppeteer.AllLaunchOptions): Promise<Puppeteer.Browser> {
+  async launch(
+    options?: Parameters<VanillaPuppeteer['launch']>[0]
+  ): ReturnType<VanillaPuppeteer['launch']> {
     // Ensure there are certain properties (e.g. the `options.args` array)
     const defaultLaunchOptions = { args: [] }
     options = merge(defaultLaunchOptions, options || {})
@@ -170,8 +185,8 @@ export class PuppeteerExtra implements Puppeteer.VanillaPuppeteer {
    * @param options - See [puppeteer docs](https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#puppeteerconnectoptions).
    */
   async connect(
-    options: Puppeteer.ConnectOptions
-  ): Promise<Puppeteer.Browser> {
+    options: Parameters<VanillaPuppeteer['connect']>[0]
+  ): ReturnType<VanillaPuppeteer['connect']> {
     this.resolvePluginDependencies()
     this.orderPlugins()
 
@@ -195,7 +210,9 @@ export class PuppeteerExtra implements Puppeteer.VanillaPuppeteer {
    *
    * @param options - See [puppeteer docs](https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#puppeteerdefaultargsoptions).
    */
-  defaultArgs(options?: Puppeteer.BrowserLaunchArgumentOptions): string[] {
+  defaultArgs(
+    options?: Parameters<VanillaPuppeteer['defaultArgs']>[0]
+  ): ReturnType<VanillaPuppeteer['defaultArgs']> {
     return this.pptr.defaultArgs(options)
   }
 
@@ -210,8 +227,8 @@ export class PuppeteerExtra implements Puppeteer.VanillaPuppeteer {
    * @param options - See [puppeteer docs](https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#puppeteercreatebrowserfetcheroptions).
    */
   createBrowserFetcher(
-    options: Puppeteer.BrowserFetcherOptions
-  ): Puppeteer.BrowserFetcher {
+    options: Parameters<VanillaPuppeteer['createBrowserFetcher']>[0]
+  ): ReturnType<VanillaPuppeteer['createBrowserFetcher']> {
     return this.pptr.createBrowserFetcher(options)
   }
 
@@ -499,8 +516,7 @@ export default defaultExport
  * @param puppeteer Any puppeteer API-compatible puppeteer implementation or version.
  * @return A fresh PuppeteerExtra instance using the provided puppeteer
  */
-export const addExtra = (puppeteer: Puppeteer.VanillaPuppeteer
-  ): PuppeteerExtra =>
+export const addExtra = (puppeteer: VanillaPuppeteer): PuppeteerExtra =>
   new PuppeteerExtra(puppeteer)
 
 /**
@@ -510,7 +526,7 @@ export const addExtra = (puppeteer: Puppeteer.VanillaPuppeteer
  * @return Either a Puppeteer instance or an Error, which we'll throw later if need be.
  * @private
  */
-function requireVanillaPuppeteer(): [Puppeteer.VanillaPuppeteer?, Error?] {
+function requireVanillaPuppeteer(): [VanillaPuppeteer?, Error?] {
   try {
     return [require('puppeteer-core'), undefined]
   } catch (_) {
@@ -519,6 +535,6 @@ function requireVanillaPuppeteer(): [Puppeteer.VanillaPuppeteer?, Error?] {
   try {
     return [require('puppeteer'), undefined]
   } catch (err) {
-    return [undefined, err]
+    return [undefined, err as Error]
   }
 }
