@@ -65,7 +65,7 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
     return path.join(this._userDataDir, 'Default')
   }
 
-  async makeTemporaryDirectory():Promise<void> {
+  async makeTemporaryDirectory(): Promise<void> {
     this._userDataDir = await mkdtempAsync(this.temporaryDirectoryPath)
     this._isTemporary = true
   }
