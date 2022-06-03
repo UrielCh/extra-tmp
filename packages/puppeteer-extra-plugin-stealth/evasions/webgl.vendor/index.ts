@@ -32,6 +32,7 @@ class WebGlVendorPlugin extends PuppeteerExtraPlugin {
       const getParameterProxyHandler = {
         apply: function(target: any, ctx: any, args: any) {
           const param = (args || [])[0]
+          const result = utils.cache.Reflect.apply(target, ctx, args)
           // UNMASKED_VENDOR_WEBGL
           if (param === 37445) {
             return opts.vendor || 'Intel Inc.' // default in headless: Google Inc.
@@ -40,7 +41,7 @@ class WebGlVendorPlugin extends PuppeteerExtraPlugin {
           if (param === 37446) {
             return opts.renderer || 'Intel Iris OpenGL Engine' // default in headless: Google SwiftShader
           }
-          return utils.cache.Reflect.apply(target, ctx, args)
+          return result
         }
       }
 

@@ -143,7 +143,7 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
       } else if (ua.includes('Android ')) {
         return ua.match(/Android ([^;]+)/)[1]
       } else if (ua.includes('Windows ')) {
-        return ua.match(/Windows .*?([\d|.]+);/)[1]
+        return ua.match(/Windows .*?([\d|.]+);?/)[1]
       } else {
         return ''
       }
