@@ -5,6 +5,7 @@ import { EventEmitter } from 'events';
  * Specify which evasions to use (by default all)
  */
 export interface EvasionsOptions {
+  availableEvasions: Set<string>;
   enabledEvasions: Set<string>;
 }
 /**
@@ -76,11 +77,11 @@ class StealthPlugin extends PuppeteerExtraPlugin<EvasionsOptions> {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth'
   }
 
-  get defaults() {
+  get defaults(): EvasionsOptions {
     const availableEvasions = new Set([
       'chrome.app',
       'chrome.csi',

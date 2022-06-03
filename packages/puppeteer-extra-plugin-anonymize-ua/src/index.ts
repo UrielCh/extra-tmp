@@ -1,6 +1,12 @@
 import { Page } from 'puppeteer'
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 
+export interface AnonymizeUaOptiopns {
+  stripHeadless: true,
+  makeWindows: true,
+  customFn: ((ua: string) => string) | null
+}
+
 /**
  * Anonymize the User-Agent on all pages.
  *
@@ -20,16 +26,16 @@ import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
  * )
  * const browser = await puppeteer.launch()
  */
-class Plugin extends PuppeteerExtraPlugin {
+class Plugin extends PuppeteerExtraPlugin<AnonymizeUaOptiopns> {
   constructor(opts = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'anonymize-ua'
   }
 
-  get defaults() {
+  get defaults(): AnonymizeUaOptiopns {
     return {
       stripHeadless: true,
       makeWindows: true,
@@ -37,7 +43,7 @@ class Plugin extends PuppeteerExtraPlugin {
     }
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     let ua = await page.browser().userAgent()
     if (this.opts.stripHeadless) {
       ua = ua.replace('HeadlessChrome/', 'Chrome/')
@@ -53,6 +59,4 @@ class Plugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function(pluginConfig?: any) {
-  return new Plugin(pluginConfig)
-}
+export default (pluginConfig?: Partial<AnonymizeUaOptiopns>) => new Plugin(pluginConfig)

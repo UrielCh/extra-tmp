@@ -571,3 +571,5 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
     return true
   }
 }
+
+export default PuppeteerExtraPlugin;

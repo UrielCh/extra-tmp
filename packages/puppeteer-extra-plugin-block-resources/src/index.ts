@@ -22,6 +22,11 @@ interface HTTPRequest {
   continue(overrides?: ContinueRequestOverrides): Promise<void>;
 }
 
+export interface BlockResourcesOption {
+  availableTypes: Set<string>,
+  // Block nothing by default
+  blockedTypes: Set<string>
+}
 
 /**
  * Block resources (images, media, css, etc.) in puppeteer.
@@ -59,16 +64,16 @@ interface HTTPRequest {
  * blockResourcesPlugin.blockedTypes.add('script')
  * await page.goto('http://www.youtube.com', {waitUntil: 'domcontentloaded'})
  */
-class BlockResourcesPlugin extends PuppeteerExtraPlugin {
-  constructor(opts = {}) {
+class BlockResourcesPlugin extends PuppeteerExtraPlugin<BlockResourcesOption> {
+  constructor(opts: Partial<BlockResourcesOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'block-resources'
   }
 
-  get defaults() {
+  get defaults(): BlockResourcesOption {
     return {
       availableTypes: new Set([
         'document',
@@ -97,7 +102,7 @@ class BlockResourcesPlugin extends PuppeteerExtraPlugin {
    *
    * @type {Set<string>} - A Set of all available resource types.
    */
-  get availableTypes() {
+  get availableTypes(): Set<string> {
     return this.defaults.availableTypes
   }
 
@@ -108,14 +113,14 @@ class BlockResourcesPlugin extends PuppeteerExtraPlugin {
    *
    * @type {Set<string>} - A Set of all blocked resource types.
    */
-  get blockedTypes() {
+  get blockedTypes(): Set<string> {
     return this.opts.blockedTypes
   }
 
   /**
    * @private
    */
-  onRequest(request: HTTPRequest) {
+  onRequest(request: HTTPRequest): Promise<void> {
     const type = request.resourceType()
     const shouldBlock = this.blockedTypes.has(type)
     this.debug('onRequest', { type, shouldBlock })
@@ -125,15 +130,11 @@ class BlockResourcesPlugin extends PuppeteerExtraPlugin {
   /**
    * @private
    */
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     this.debug('onPageCreated', { blockedTypes: this.blockedTypes })
     await page.setRequestInterception(true)
     page.on('request', this.onRequest.bind(this))
   }
 }
 
-export = function(pluginConfig?: {availableTypes?: Set<string>, blockedTypes?: Set<string>}) {
-  return new BlockResourcesPlugin(pluginConfig)
-}
-
-
+export default (pluginConfig?: Partial<BlockResourcesOption>) => new BlockResourcesPlugin(pluginConfig)

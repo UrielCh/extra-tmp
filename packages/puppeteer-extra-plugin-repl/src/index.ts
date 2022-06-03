@@ -2,7 +2,7 @@ import { Page } from 'puppeteer'
 import { PluginRequirements, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import REPLSession from './lib/REPLSession'
 
-interface PluginOptions { addToPuppeteerClass: boolean }
+export interface PluginOptions { addToPuppeteerClass: boolean }
 
 /**
  * Interrupt your puppeteer code with an interactive REPL.
@@ -36,16 +36,16 @@ interface PluginOptions { addToPuppeteerClass: boolean }
  *   await browser.close()
  * })
  */
-class Plugin extends PuppeteerExtraPlugin {
-  constructor(opts = {}) {
+class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'repl'
   }
 
-  get defaults() : PluginOptions{
+  get defaults(): PluginOptions {
     return { addToPuppeteerClass: true }
   }
 
@@ -85,7 +85,7 @@ class Plugin extends PuppeteerExtraPlugin {
    *
    * @ignore
    */
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     if (!this.opts.addToPuppeteerClass) {
       return
     }
@@ -95,6 +95,4 @@ class Plugin extends PuppeteerExtraPlugin {
   }
 }
 
-export default function(pluginConfig?: any) {
-  return new Plugin(pluginConfig)
-}
+export default (pluginConfig?: Partial<PluginOptions>) => new Plugin(pluginConfig)

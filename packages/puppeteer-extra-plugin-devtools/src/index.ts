@@ -3,6 +3,27 @@ import * as RemoteDevTools from './lib/RemoteDevTools'
 import ow from 'ow'
 import { Browser, Page } from 'puppeteer';
 import { DevToolsTunnel } from './lib/RemoteDevTools'
+import crypto from 'crypto';
+
+export interface PluginOption {
+  /**
+   * The prefix to use for the localtunnel.me subdomain (default: 'devtools-tunnel')
+   */
+  prefix: string,
+  /**
+   * Basic auth credentials for the public page
+   */
+  auth: {
+    /**
+     * Username (default: 'user')
+     */
+    user: string;
+    /**
+     * Password (will be generated if not provided)
+     */
+    pass: string;
+  }
+}
 
 /**
  * As the tunnel page is public the plugin will require basic auth.
@@ -31,28 +52,26 @@ import { DevToolsTunnel } from './lib/RemoteDevTools'
  *   // => tunnel url: https://devtools-tunnel-n9aogqwx3d.localtunnel.me
  * })
  */
-class Plugin extends PuppeteerExtraPlugin {
+class Plugin extends PuppeteerExtraPlugin<PluginOption> {
   _browserSessions: {[key:string]: DevToolsTunnel};
 
-  constructor(opts = {}) {
+  constructor(opts: Partial<PluginOption> = {}) {
     super(opts)
 
     // To store a wsEndpoint (= browser instance) > tunnel reference
     this._browserSessions = {}
   }
 
-  get name() {
+  get name(): string {
     return 'devtools'
   }
 
-  get defaults() {
+  get defaults(): PluginOption {
     return {
       prefix: 'devtools-tunnel',
       auth: {
         user: 'user',
-        pass: require('crypto')
-          .randomBytes(20)
-          .toString('hex')
+        pass: crypto.randomBytes(20).toString('hex')
       }
     }
   }
@@ -236,6 +255,4 @@ class Tunnel extends RemoteDevTools.DevToolsTunnel {
   }
 }
 
-export = function(pluginConfig?: any) {
-  return new Plugin(pluginConfig)
-}
+export default (pluginConfig?: Partial<PluginOption>) => new Plugin(pluginConfig)
