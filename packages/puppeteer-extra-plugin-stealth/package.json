@@ -48,7 +48,9 @@
     ]
   },
   "devDependencies": {
+    "@types/chrome": "^0.0.188",
     "@types/node": "^17.0.38",
+    "@types/offscreencanvas": "^2019.7.0",
     "ava": "3.15.0",
     "documentation-markdown-themes": "^12.1.5",
     "fpcollect": "^1.0.4",

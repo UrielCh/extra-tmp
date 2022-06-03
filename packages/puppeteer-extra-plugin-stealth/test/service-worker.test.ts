@@ -1,6 +1,6 @@
 import test from 'ava'
 
-import { vanillaPuppeteer, addExtra } from './util'
+import { vanillaPuppeteer, VanillaPuppeteer, addExtra } from './util'
 import Plugin from '..'
 import http from 'http'
 import fs from 'fs'
@@ -43,7 +43,7 @@ test.before(async t => {
   const address = await httpServer()
   console.log(`Server is running on port ${address}`)
 
-  browser = await addExtra(vanillaPuppeteer)
+  browser = await addExtra(vanillaPuppeteer as unknown as VanillaPuppeteer)
     .use(Plugin())
     .launch({ headless: true })
   page = await browser.newPage()

@@ -26,7 +26,7 @@ const utils = {
   // {[key:string]: (...args: any[]) => any}
   stripProxyFromErrors: (handler = {} as ProxyHandler<any>) => {
     // const newHandler = {} as {[key:string]: (...args: any[]) => any}
-    const newHandler = {
+    const newHandler: {[key: string]: (...args: any[]) => any} = {
       setPrototypeOf: function (target: any, proto: any) {
         if (proto === null)
           throw new TypeError('Cannot convert object to primitive value')
@@ -46,9 +46,10 @@ const utils = {
           // Forward the call to the defined proxy handler
           const mtd = handler[trap] as Function;
           return mtd.apply(this, args || [])
-        } catch (err) {
+        } catch (e) {
+          const err = e as Error;
           // Stack traces differ per browser, we only support chromium based ones currently
-          if (!err || !err.stack || !err.stack.includes(`at `)) {
+          if (!err || !err.stack || !err.stack!.includes(`at `)) {
             throw err
           }
 
@@ -65,7 +66,7 @@ const utils = {
               `at Object.newHandler.<computed> [as ${trap}] ` // caused by this very wrapper :-)
             ]
             return (
-              err.stack
+              err.stack!
                 .split('\n')
                 // Always remove the first (file) line in the stack (guaranteed to be our proxy)
                 .filter((line: string, index: number) => !(index === 1 && stripFirstLine))

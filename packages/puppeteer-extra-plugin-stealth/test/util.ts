@@ -1,12 +1,13 @@
 import { Page } from "puppeteer";
 
 import assert from 'assert'
-import { addExtra } from 'puppeteer-extra'
+import { addExtra, VanillaPuppeteer } from 'puppeteer-extra'
 export { addExtra, VanillaPuppeteer } from 'puppeteer-extra'
 
 export { default as vanillaPuppeteer} from 'puppeteer'
-import { default as vanillaPuppeteer} from 'puppeteer'
+import vanillaPuppeteer from 'puppeteer'
 
+// 
 const fpCollectPath = require.resolve('fpcollect/dist/fpCollect.min.js')
 
 var fpCollect: any;
@@ -36,7 +37,7 @@ const getFingerPrint = async (puppeteer: any, pageFn?: any) => {
 export const getVanillaFingerPrint = async (pageFn?: any) =>
   getFingerPrint(vanillaPuppeteer, pageFn)
 export const getStealthFingerPrint = async (Plugin: any, pageFn?: any, pluginOptions = null) =>
-  getFingerPrint(addExtra(vanillaPuppeteer).use(Plugin(pluginOptions)), pageFn)
+  getFingerPrint(addExtra(vanillaPuppeteer as unknown as VanillaPuppeteer).use(Plugin(pluginOptions)), pageFn)
 
 // Expecting the input string to be in one of these formats:
 // - The UA string

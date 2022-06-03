@@ -15,7 +15,7 @@ const isOldPuppeteerVersion = () => {
 /* global HTMLIFrameElement */
 /* global Notification */
 test('stealth: will pass Paul Irish', async t => {
-  const browser = await util.addExtra(util.vanillaPuppeteer)
+  const browser = await util.addExtra(util.vanillaPuppeteer as unknown as util.VanillaPuppeteer)
     .use(Plugin())
     .launch({ headless: true })
   const page = await browser.newPage()

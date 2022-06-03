@@ -5,7 +5,7 @@ import {
   getStealthFingerPrint
 } from '../../test/util'
 
-import { vanillaPuppeteer, addExtra } from '../../test/util'
+import { vanillaPuppeteer, VanillaPuppeteer, addExtra } from '../../test/util'
 
 import Plugin from '.'
 import { Page } from 'puppeteer'
@@ -37,7 +37,7 @@ test('stealth: is chrome true', async t => {
 })
 
 test('stealth: will add convincing chrome.runtime object', async t => {
-  const puppeteer = addExtra(vanillaPuppeteer).use(
+  const puppeteer = addExtra(vanillaPuppeteer as unknown as VanillaPuppeteer).use(
     Plugin({
       runOnInsecureOrigins: true // for testing
     })
@@ -51,7 +51,7 @@ test('stealth: will add convincing chrome.runtime object', async t => {
       try {
         return fn.apply(this, args)
       } catch (err) {
-        return err.toString()
+        return (err as Error).toString()
       }
     }
 
@@ -128,7 +128,7 @@ test('stealth: will add convincing chrome.runtime object', async t => {
 })
 
 test('stealth: will add convincing chrome.runtime.connect', async t => {
-  const puppeteer = addExtra(vanillaPuppeteer).use(
+  const puppeteer = addExtra(vanillaPuppeteer as unknown as VanillaPuppeteer).use(
     Plugin({
       runOnInsecureOrigins: true // for testing
     })
@@ -214,7 +214,7 @@ test('stealth: will add convincing chrome.runtime.connect', async t => {
 })
 
 test('stealth: will add convincing chrome.runtime.connect response', async t => {
-  const puppeteer = addExtra(vanillaPuppeteer).use(
+  const puppeteer = addExtra(vanillaPuppeteer as unknown as VanillaPuppeteer).use(
     Plugin({
       runOnInsecureOrigins: true // for testing
     })
@@ -256,7 +256,7 @@ test('stealth: will add convincing chrome.runtime.connect response', async t => 
 })
 
 test('stealth: error stack is fine', async t => {
-  const puppeteer = addExtra(vanillaPuppeteer).use(
+  const puppeteer = addExtra(vanillaPuppeteer as unknown as VanillaPuppeteer).use(
     Plugin({
       runOnInsecureOrigins: true // for testing
     })
