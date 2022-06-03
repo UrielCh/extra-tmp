@@ -10,7 +10,8 @@
   },
   "scripts": {
     "bootstrap": "lerna bootstrap",
-    "build": "yarn lerna exec --concurrency 1 'yarn build; echo 0'",
+    "build": "yarn lerna exec --concurrency 1 \"yarn build || echo 0\"",
+    "build_alt": "yarn lerna exec --concurrency 1 \"run-s -c build\"",
     "docs": "lerna run docs",
     "test": "lerna run test --concurrency 1 --stream",
     "test-ci": "lerna run test-ci --concurrency 1 --stream",

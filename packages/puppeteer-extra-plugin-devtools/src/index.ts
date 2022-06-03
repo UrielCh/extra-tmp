@@ -88,7 +88,7 @@ class Plugin extends PuppeteerExtraPlugin {
   async createTunnel(browser: Browser) {
     ow(browser, ow.object.hasKeys('wsEndpoint'))
 
-    const wsEndpoint = browser.wsEndpoint()
+    const wsEndpoint = (browser as any).wsEndpoint()
     if (!this._browserSessions[wsEndpoint]) {
       const tunnel = new Tunnel(wsEndpoint, this.opts);
       this._browserSessions[wsEndpoint] = await tunnel.create()
@@ -149,7 +149,7 @@ class Plugin extends PuppeteerExtraPlugin {
   getLocalDevToolsUrl(browser: Browser) {
     ow(browser, ow.object.hasKeys('wsEndpoint'))
 
-    const wsEndpoint = browser.wsEndpoint()
+    const wsEndpoint = (browser as any).wsEndpoint()
     return new RemoteDevTools.DevToolsLocal(wsEndpoint).url
   }
 
