@@ -23,16 +23,16 @@ interface NavigatorPluginOption {
  * @see https://developer.mozilla.org/en-US/docs/Web/API/NavigatorPlugins/plugins
  * @see https://developer.mozilla.org/en-US/docs/Web/API/PluginArray
  */
-class NavigatorPlugin extends PuppeteerExtraPlugin {
+class NavigatorPlugin extends PuppeteerExtraPlugin<NavigatorPluginOption> {
   constructor(opts: Partial<NavigatorPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/navigator.plugins'
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument(
       (utils: typeof Utils, { fns, data } : {fns: any, data: any}) => {
         fns = utils.materializeFns(fns)
@@ -96,6 +96,4 @@ class NavigatorPlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function(pluginConfig: Partial<NavigatorPluginOption>) {
-  return new NavigatorPlugin(pluginConfig)
-}
+export default (pluginConfig: Partial<NavigatorPluginOption>) => new NavigatorPlugin(pluginConfig)

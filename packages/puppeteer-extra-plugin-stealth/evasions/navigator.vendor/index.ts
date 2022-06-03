@@ -3,7 +3,7 @@ import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import Utils from '../_utils'
 import withUtils from '../_utils/withUtils'
 
-interface NavigatorVendorPluginOption {
+export interface NavigatorVendorPluginOption {
   vendor: string;
 }
 
@@ -30,12 +30,12 @@ interface NavigatorVendorPluginOption {
  * @param {string} [opts.vendor] - The vendor to use in `navigator.vendor` (default: `Google Inc.`)
  *
  */
-class NavigatorVendorPlugin extends PuppeteerExtraPlugin {
+class NavigatorVendorPlugin extends PuppeteerExtraPlugin<NavigatorVendorPluginOption> {
   constructor(opts: Partial<NavigatorVendorPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/navigator.vendor'
   }
 
@@ -45,7 +45,7 @@ class NavigatorVendorPlugin extends PuppeteerExtraPlugin {
     }
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     this.debug('onPageCreated', {
       opts: this.opts
     })
@@ -65,4 +65,4 @@ class NavigatorVendorPlugin extends PuppeteerExtraPlugin {
   } // onPageCreated
 }
 
-export = (opts: Partial<NavigatorVendorPluginOption>) => new NavigatorVendorPlugin(opts)
+export default (opts: Partial<NavigatorVendorPluginOption>) => new NavigatorVendorPlugin(opts)

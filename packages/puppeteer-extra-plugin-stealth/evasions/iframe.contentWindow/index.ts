@@ -1,6 +1,6 @@
 import Utils from '../_utils'
 import { Page } from 'puppeteer'
-import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
+import { PluginRequirements, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 
 interface IframeContentWindowPluginOption {
@@ -12,21 +12,21 @@ interface IframeContentWindowPluginOption {
  *
  * https://github.com/puppeteer/puppeteer/issues/1106
  */
-class IframeContentWindowPlugin extends PuppeteerExtraPlugin {
+class IframeContentWindowPlugin extends PuppeteerExtraPlugin<IframeContentWindowPluginOption> {
   constructor(opts: Partial<IframeContentWindowPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/iframe.contentWindow'
   }
 
-  get requirements(): Set<'runLast'> {
+  get requirements(): PluginRequirements {
     // Make sure `chrome.runtime` has ran, we use data defined by it (e.g. `window.chrome`)
     return new Set(['runLast'])
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument((utils: typeof Utils, IframeContentWindowPluginOption: any) => {
       try {
         // Adds a contentWindow proxy to the provided iframe element
@@ -133,6 +133,4 @@ class IframeContentWindowPlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function(pluginConfig: Partial<IframeContentWindowPluginOption>) {
-  return new IframeContentWindowPlugin(pluginConfig)
-}
+export default (pluginConfig: Partial<IframeContentWindowPluginOption>) => new IframeContentWindowPlugin(pluginConfig)

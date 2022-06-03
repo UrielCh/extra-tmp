@@ -21,16 +21,16 @@ interface ChromeCsiPluginOption {}
  * @see `chrome.loadTimes` evasion
  *
  */
-class ChromeCsiPlugin extends PuppeteerExtraPlugin {
+class ChromeCsiPlugin extends PuppeteerExtraPlugin<ChromeCsiPluginOption> {
   constructor(opts: Partial<ChromeCsiPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/chrome.csi'
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument((utils: typeof Utils) => {
       const chrome = (window as any).chrome;
       if (!chrome) {
@@ -70,6 +70,4 @@ class ChromeCsiPlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function(pluginConfig: Partial<ChromeCsiPluginOption>) {
-  return new ChromeCsiPlugin(pluginConfig)
-}
+export default (pluginConfig: Partial<ChromeCsiPluginOption>) => new ChromeCsiPlugin(pluginConfig)

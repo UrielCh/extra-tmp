@@ -8,16 +8,16 @@ interface ChromeAppPluginOption {
 /**
  * Mock the `chrome.app` object if not available (e.g. when running headless).
  */
-class ChromeAppPlugin extends PuppeteerExtraPlugin {
+class ChromeAppPlugin extends PuppeteerExtraPlugin<ChromeAppPluginOption> {
   constructor(opts: Partial<ChromeAppPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/chrome.app'
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument((utils: typeof Utils) => {
       const {chrome} = window as any;
       if (!chrome) {
@@ -97,6 +97,4 @@ class ChromeAppPlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function(pluginConfig: Partial<ChromeAppPluginOption>) {
-  return new ChromeAppPlugin(pluginConfig)
-}
+export default (pluginConfig: Partial<ChromeAppPluginOption>) => new ChromeAppPlugin(pluginConfig)

@@ -3,21 +3,21 @@ import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 import { Page } from 'puppeteer'
 
-interface MediaCodecsPluginOption {}
+export interface MediaCodecsPluginOption {}
 /**
  * Fix Chromium not reporting "probably" to codecs like `videoEl.canPlayType('video/mp4; codecs="avc1.42E01E"')`.
  * (Chromium doesn't support proprietary codecs, only Chrome does)
  */
-class MediaCodecsPlugin extends PuppeteerExtraPlugin {
+class MediaCodecsPlugin extends PuppeteerExtraPlugin<MediaCodecsPluginOption> {
   constructor(opts: Partial<MediaCodecsPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/media.codecs'
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument((utils: typeof Utils) => {
       /**
        * Input might look funky, we need to normalize it so e.g. whitespace isn't an issue for our spoofing.
@@ -86,4 +86,4 @@ class MediaCodecsPlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = (pluginConfig: Partial<MediaCodecsPluginOption>) => new MediaCodecsPlugin(pluginConfig)
+export default (pluginConfig: Partial<MediaCodecsPluginOption>) => new MediaCodecsPlugin(pluginConfig)

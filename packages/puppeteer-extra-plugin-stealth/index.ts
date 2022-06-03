@@ -4,8 +4,8 @@ import { EventEmitter } from 'events';
 /**
  * Specify which evasions to use (by default all)
  */
-interface EvasionsOptions {
-  enabledEvasions?: Set<String>;
+export interface EvasionsOptions {
+  enabledEvasions: Set<string>;
 }
 /**
  * Stealth mode: Applies various techniques to make detection of headless puppeteer harder. 💯
@@ -71,8 +71,8 @@ interface EvasionsOptions {
  * })()
  *
  */
-class StealthPlugin extends PuppeteerExtraPlugin {
-  constructor(opts:EvasionsOptions = {}) {
+class StealthPlugin extends PuppeteerExtraPlugin<EvasionsOptions> {
+  constructor(opts: Partial<EvasionsOptions> = {}) {
     super(opts)
   }
 
@@ -171,8 +171,7 @@ class StealthPlugin extends PuppeteerExtraPlugin {
  * @param {Object} [opts] - Options
  * @param {Set<string>} [opts.enabledEvasions] - Specify which evasions to use (by default all)
  */
-const defaultExport = (opts?: {enabledEvasions?: Set<String>}) => new StealthPlugin(opts)
-export = defaultExport
+export default (opts?: Partial<EvasionsOptions>) => new StealthPlugin(opts)
 
 // const moduleExport = defaultExport
 // moduleExport.StealthPlugin = StealthPlugin

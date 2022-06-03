@@ -12,17 +12,17 @@ interface NavigatorPermissionsPluginOption {
  * @see https://bugs.chromium.org/p/chromium/issues/detail?id=1052332
  */
 
-class NavigatorPermissionsPlugin extends PuppeteerExtraPlugin {
+class NavigatorPermissionsPlugin extends PuppeteerExtraPlugin<NavigatorPermissionsPluginOption> {
   constructor(opts: Partial<NavigatorPermissionsPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/navigator.permissions'
   }
 
   /* global Notification Permissions PermissionStatus */
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument((utils: typeof Utils, opts: NavigatorPermissionsPluginOption) => {
       const isSecure = document.location.protocol.startsWith('https')
 
@@ -67,6 +67,4 @@ class NavigatorPermissionsPlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function (pluginConfig: Partial<NavigatorPermissionsPluginOption>) {
-  return new NavigatorPermissionsPlugin(pluginConfig)
-}
+export default (pluginConfig: Partial<NavigatorPermissionsPluginOption>) => new NavigatorPermissionsPlugin(pluginConfig)

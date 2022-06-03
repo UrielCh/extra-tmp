@@ -1,5 +1,5 @@
 import { CDPSession, Page } from 'puppeteer';
-import { PluginData, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
+import { PluginData, PluginDependencies, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 
 
 interface UserAgentOverridePluginOption {
@@ -44,7 +44,7 @@ interface UserAgentOverridePluginOption {
  * @param {boolean} [opts.maskLinux] - Wether to hide Linux as platform in the user agent or not - true by default
  *
  */
-class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
+class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePluginOption, {headless?: boolean}> {
   private _headless?: boolean;
 
   constructor(opts: Partial<UserAgentOverridePluginOption> = {}) {
@@ -53,11 +53,11 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
     this._headless = false
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/user-agent-override'
   }
 
-  get dependencies() {
+  get dependencies(): PluginDependencies {
     return new Set(['user-preferences'])
   }
 
@@ -69,7 +69,7 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
     }
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     // Determine the full user agent string, strip the "Headless" part
     let ua =
       this.opts.userAgent ||
@@ -84,9 +84,8 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
     }
 
     // Full version number from Chrome
-    const uaVersion = ua.includes('Chrome/')
-      ? ua.match(/Chrome\/([\d|.]+)/)[1]
-      : ((await page.browser().version()).match(/\/([\d|.]+)/) as string[])[1]
+    const m = ua.match(/Chrome\/([\d|.]+)/);
+    const uaVersion = m ? m[1] : (await page.browser().version()).match(/\/([\d|.]+)/)![1]
 
     // Get platform identifier (short or long version)
     const _getPlatform = (extended = false) => {
@@ -103,7 +102,7 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
 
     // Source in C++: https://source.chromium.org/chromium/chromium/src/+/master:components/embedder_support/user_agent_utils.cc;l=55-100
     const _getBrands = () => {
-      const seed = uaVersion.split('.')[0] // the major version number of Chrome
+      const seed = Number(uaVersion.split('.')[0]) // the major version number of Chrome
 
       const order = [
         [0, 1, 2],
@@ -137,16 +136,17 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
     }
 
     // Return OS version
-    const _getPlatformVersion = () => {
-      if (ua.includes('Mac OS X ')) {
-        return ua.match(/Mac OS X ([^)]+)/)[1]
-      } else if (ua.includes('Android ')) {
-        return ua.match(/Android ([^;]+)/)[1]
-      } else if (ua.includes('Windows ')) {
-        return ua.match(/Windows .*?([\d|.]+);?/)[1]
-      } else {
-        return ''
-      }
+    const _getPlatformVersion = (): string => {
+      let m = ua.match(/Mac OS X ([^)]+)/);
+      if (m)
+        return m[1];
+      m = ua.match(/Android ([^;]+)/);
+      if (m)
+        return m[1];
+      m = ua.match(/Windows .*?([\d|.]+);?/)
+      if (m)
+        return m[1];
+      return ''
     }
 
     // Get architecture, this seems to be empty on mobile and x86 on desktop
@@ -154,7 +154,7 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
 
     // Return the Android model, empty on desktop
     const _getPlatformModel = () =>
-      _getMobile() ? ua.match(/Android.*?;\s([^)]+)/)[1] : ''
+      _getMobile() ? ua.match(/Android.*?;\s([^)]+)/)![1] : ''
 
     const _getMobile = () => ua.includes('Android')
 
@@ -187,12 +187,12 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
     client.send('Network.setUserAgentOverride', override)
   }
 
-  async beforeLaunch(options: {headless?: boolean}) {
+  async beforeLaunch(options: {headless?: boolean}): Promise<void> {
     // Check if launched headless
     this._headless = options.headless
   }
 
-  async beforeConnect() {
+  async beforeConnect(): Promise<void> {
     // Treat browsers using connect() as headless browsers
     this._headless = true
   }
@@ -209,4 +209,4 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = (opts: Partial<UserAgentOverridePluginOption>) => new UserAgentOverridePlugin(opts)
+export default (opts: Partial<UserAgentOverridePluginOption>) => new UserAgentOverridePlugin(opts)

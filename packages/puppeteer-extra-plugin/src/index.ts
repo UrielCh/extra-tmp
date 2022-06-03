@@ -4,9 +4,6 @@ import * as Puppeteer from './puppeteer'
 /** @private */
 const merge = require('merge-deep')
 
-export interface PluginOptions {
-  [key: string]: any
-}
 export interface PluginData {
   name: string,
   value: {
@@ -15,9 +12,7 @@ export interface PluginData {
 }
 
 export type PluginDependencies = Set<string>
-export type PluginRequirements = Set<
-  'launch' | 'headful' | 'dataFromPlugins' | 'runLast'
->
+export type PluginRequirements = Set<'launch' | 'headful' | 'dataFromPlugins' | 'runLast'>
 
 /**
  * Base class for `puppeteer-extra` plugins.
@@ -60,15 +55,15 @@ export type PluginRequirements = Set<
  * })()
  *
  */
-export abstract class PuppeteerExtraPlugin {
+export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
   /** @private */
   private _debugBase: Debugger
   /** @private */
-  private _opts: PluginOptions
+  private _opts: OPTION
   /** @private */
   private _childClassMembers: string[]
 
-  constructor(opts?: PluginOptions) {
+  constructor(opts?: Partial<OPTION>) {
     this._debugBase = debug(`puppeteer-extra-plugin:base:${this.name}`)
     this._childClassMembers = []
 
@@ -112,8 +107,8 @@ export abstract class PuppeteerExtraPlugin {
    * // Users can overwrite plugin defaults during instantiation:
    * puppeteer.use(require('puppeteer-extra-plugin-foobar')({ makeWindows: false }))
    */
-  get defaults(): PluginOptions {
-    return {}
+  get defaults(): OPTION {
+    return {} as OPTION
   }
 
   /**
@@ -210,7 +205,7 @@ export abstract class PuppeteerExtraPlugin {
    *   this.debug(this.opts.foo) // => bar
    * }
    */
-  get opts(): PluginOptions {
+  get opts(): OPTION {
     return this._opts
   }
 
@@ -251,7 +246,7 @@ export abstract class PuppeteerExtraPlugin {
    *
    * @param options - Puppeteer launch options
    */
-  async beforeLaunch(options: any) {
+  async beforeLaunch(options: Partial<PRE_OPTION>): Promise<void> {
     // noop
   }
 
@@ -285,7 +280,7 @@ export abstract class PuppeteerExtraPlugin {
   async afterLaunch(
     browser: Puppeteer.Browser,
     opts = { options: {} as Puppeteer.LaunchOptions }
-  ) {
+  ): Promise<void> {
     // noop
   }
 
@@ -300,7 +295,7 @@ export abstract class PuppeteerExtraPlugin {
    * @param  {Object} options - Puppeteer connect options
    * @return {Object=}
    */
-  async beforeConnect(options: Puppeteer.ConnectOptions) {
+  async beforeConnect(options: Puppeteer.ConnectOptions): Promise<void> {
     // noop
   }
 
@@ -314,7 +309,7 @@ export abstract class PuppeteerExtraPlugin {
    * @param  {Object} opts.options - Puppeteer connect options used.
    *
    */
-  async afterConnect(browser: Puppeteer.Browser, opts = {}) {
+  async afterConnect(browser: Puppeteer.Browser, opts = {}): Promise<void> {
     // noop
   }
 
@@ -343,7 +338,7 @@ export abstract class PuppeteerExtraPlugin {
    *
    * @param  {Puppeteer.Target} target
    */
-  async onTargetCreated(target: Puppeteer.Target) {
+  async onTargetCreated(target: Puppeteer.Target): Promise<void> {
     // noop
   }
 
@@ -366,7 +361,7 @@ export abstract class PuppeteerExtraPlugin {
    *   await page.setUserAgent(ua)
    * }
    */
-  async onPageCreated(page: Puppeteer.Page) {
+  async onPageCreated(page: Puppeteer.Page): Promise<void> {
     // noop
   }
 
@@ -379,7 +374,7 @@ export abstract class PuppeteerExtraPlugin {
    *
    * @param  {Puppeteer.Target} target
    */
-  async onTargetChanged(target: Puppeteer.Target) {
+  async onTargetChanged(target: Puppeteer.Target): Promise<void> {
     // noop
   }
 
@@ -392,7 +387,7 @@ export abstract class PuppeteerExtraPlugin {
    *
    * @param  {Puppeteer.Target} target
    */
-  async onTargetDestroyed(target: Puppeteer.Target) {
+  async onTargetDestroyed(target: Puppeteer.Target): Promise<void> {
     // noop
   }
 
@@ -403,7 +398,7 @@ export abstract class PuppeteerExtraPlugin {
    * - Chromium is closed or crashed
    * - The `browser.disconnect` method was called
    */
-  async onDisconnected() {
+  async onDisconnected(): Promise<void> {
     // noop
   }
 
@@ -419,7 +414,7 @@ export abstract class PuppeteerExtraPlugin {
    *
    * > Note: This only includes browser instances created through `.launch()`.
    */
-  async onClose() {
+  async onClose(): Promise<void> {
     // noop
   }
 
@@ -428,7 +423,7 @@ export abstract class PuppeteerExtraPlugin {
    *
    * Normally right after `puppeteer.use(plugin)` is called
    */
-  async onPluginRegistered() {
+  async onPluginRegistered(): Promise<void> {
     // noop
   }
 
@@ -456,7 +451,7 @@ export abstract class PuppeteerExtraPlugin {
    *
    * @private
    */
-  _getMissingDependencies(plugins: any) {
+  _getMissingDependencies(plugins: any): Set<string> {
     const pluginNames = new Set(plugins.map((p: any) => p.name))
     const missing = new Set(
       Array.from(this.dependencies.values()).filter(x => !pluginNames.has(x))
@@ -479,7 +474,7 @@ export abstract class PuppeteerExtraPlugin {
    *
    * @private
    */
-  async _bindBrowserEvents(browser: Puppeteer.Browser, opts: any = {}) {
+  async _bindBrowserEvents(browser: Puppeteer.Browser, opts: any = {}): Promise<void> {
     if (
       this._hasChildClassMember('onTargetCreated') ||
       this._hasChildClassMember('onPageCreated')
@@ -528,7 +523,7 @@ export abstract class PuppeteerExtraPlugin {
   /**
    * @private
    */
-  async _onTargetCreated(target: Puppeteer.Target) {
+  async _onTargetCreated(target: Puppeteer.Target): Promise<void> {
     if (this.onTargetCreated) await this.onTargetCreated(target)
     // Pre filter pages for plugin developers convenience
     if (target.type() === 'page') {
@@ -550,7 +545,7 @@ export abstract class PuppeteerExtraPlugin {
   /**
    * @private
    */
-  _register(prototype: any) {
+  _register(prototype: any): void {
     this._registerChildClassMembers(prototype)
     if (this.onPluginRegistered) this.onPluginRegistered()
   }
@@ -558,21 +553,21 @@ export abstract class PuppeteerExtraPlugin {
   /**
    * @private
    */
-  _registerChildClassMembers(prototype: any) {
+  _registerChildClassMembers(prototype: any): void {
     this._childClassMembers = Object.getOwnPropertyNames(prototype)
   }
 
   /**
    * @private
    */
-  _hasChildClassMember(name: string) {
+  _hasChildClassMember(name: string): boolean {
     return !!this._childClassMembers.includes(name)
   }
 
   /**
    * @private
    */
-  get _isPuppeteerExtraPlugin() {
+  get _isPuppeteerExtraPlugin(): boolean {
     return true
   }
 }

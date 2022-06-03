@@ -9,7 +9,6 @@
  * Alternatively take a look at the `extract-stealth-evasions` package to create a finished bundle which includes these utilities.
  *
  */
-// const utils = {} as any
 
 const utils = {
   init: () => {
@@ -206,7 +205,7 @@ const utils = {
    *
    * @param {string} [name] - Optional function name
    */
-  makeNativeString: (name = '') => {
+  makeNativeString: (name: string = '') => {
     return utils.cache.nativeToStringStr.replace('toString', name || '')
   },
 
@@ -224,7 +223,7 @@ const utils = {
    * @param {object} obj - The object for which to modify the `toString()` representation
    * @param {string} str - Optional string used as a return value
    */
-  patchToString: (obj: any, str = '') => {
+  patchToString: (obj: any, str: string = '') => {
     const handler = {
       apply: function (target: Function, ctx: any) {
         // This fixes e.g. `HTMLMediaElement.prototype.canPlayType.toString + ""`
@@ -530,4 +529,4 @@ const utils = {
 // Stuff starting below this line is NodeJS specific.
 // --
 
-export = utils
+export default utils

@@ -14,22 +14,22 @@ interface NavigatorLanguagesPluginOption {
  * @param {Object} [opts] - Options
  * @param {Array<string>} [opts.languages] - The languages to use (default: `['en-US', 'en']`)
  */
-class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin {
+class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin<NavigatorLanguagesPluginOption> {
   constructor(opts: Partial<NavigatorLanguagesPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/navigator.languages'
   }
 
-  get defaults() {
+  get defaults(): NavigatorLanguagesPluginOption {
     return {
       languages: [] // Empty default, otherwise this would be merged with user defined array override
     }
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument(
       (utils: typeof Utils, { opts }: {opts: NavigatorLanguagesPluginOption}) => {
         const languages: string[] = opts.languages.length
@@ -48,6 +48,4 @@ class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function (pluginConfig: Partial<NavigatorLanguagesPluginOption>) {
-  return new NavigatorLanguagesPlugin(pluginConfig)
-}
+export default (pluginConfig: Partial<NavigatorLanguagesPluginOption>) => new NavigatorLanguagesPlugin(pluginConfig)

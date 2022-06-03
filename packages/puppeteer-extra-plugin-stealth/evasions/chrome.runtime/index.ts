@@ -12,12 +12,12 @@ interface ChromeRuntimePluginOption {
 /**
  * Mock the `chrome.runtime` object if not available (e.g. when running headless) and on a secure site.
  */
-class ChromeRuntimePlugin extends PuppeteerExtraPlugin {
+class ChromeRuntimePlugin extends PuppeteerExtraPlugin<ChromeRuntimePluginOption> {
   constructor(opts: Partial<ChromeRuntimePluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/chrome.runtime'
   }
 
@@ -25,7 +25,7 @@ class ChromeRuntimePlugin extends PuppeteerExtraPlugin {
     return { runOnInsecureOrigins: false } // Override for testing
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument(
       (utils: typeof Utils, { opts, STATIC_DATA }: { opts: ChromeRuntimePluginOption, STATIC_DATA: any[] }) => {
         const {chrome} = window as any
@@ -253,6 +253,4 @@ class ChromeRuntimePlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function(pluginConfig: Partial<ChromeRuntimePluginOption>) {
-  return new ChromeRuntimePlugin(pluginConfig)
-}
+export default (pluginConfig: Partial<ChromeRuntimePluginOption>) => new ChromeRuntimePlugin(pluginConfig)

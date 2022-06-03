@@ -17,17 +17,17 @@ interface WebGlVendorPluginOption {
  * @param {string} [opts.vendor] - The vendor string to use (default: `Intel Inc.`)
  * @param {string} [opts.renderer] - The renderer string (default: `Intel Iris OpenGL Engine`)
  */
-class WebGlVendorPlugin extends PuppeteerExtraPlugin {
+class WebGlVendorPlugin extends PuppeteerExtraPlugin<WebGlVendorPluginOption> {
   constructor(opts: Partial<WebGlVendorPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/webgl.vendor'
   }
 
   /* global WebGLRenderingContext WebGL2RenderingContext */
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument((utils: typeof utilsGlobal, opts: WebGlVendorPluginOption) => {
       const getParameterProxyHandler = {
         apply: function(target: any, ctx: any, args: any) {

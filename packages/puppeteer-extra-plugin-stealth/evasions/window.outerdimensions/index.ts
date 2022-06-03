@@ -1,22 +1,22 @@
 import { Page } from 'puppeteer'
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 
-interface WindowOuterDimensionsPluginOptions {}
+export interface WindowOuterDimensionsPluginOptions {}
 
 /**
  * Fix missing window.outerWidth/window.outerHeight in headless mode
  * Will also set the viewport to match window size, unless specified by user
  */
-class WindowOuterDimensionsPlugin extends PuppeteerExtraPlugin {
+class WindowOuterDimensionsPlugin extends PuppeteerExtraPlugin<WindowOuterDimensionsPluginOptions, {defaultViewport: any}> {
   constructor(opts: Partial<WindowOuterDimensionsPluginOptions> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/window.outerdimensions'
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     // Chrome returns undefined, Firefox false
     await page.evaluateOnNewDocument(() => {
       try {
@@ -30,16 +30,16 @@ class WindowOuterDimensionsPlugin extends PuppeteerExtraPlugin {
     })
   }
 
-  async beforeLaunch(options: any) {
+  async beforeLaunch(options: Partial<{defaultViewport: any}>) {
     // Have viewport match window size, unless specified by user
     // https://github.com/GoogleChrome/puppeteer/issues/3688
     if (!('defaultViewport' in options)) {
       options.defaultViewport = null
     }
-    return options
+    // return options // TODO useless ?
   }
 }
 
-export = function(pluginConfig: Partial<WindowOuterDimensionsPluginOptions>) {
+export default function(pluginConfig: Partial<WindowOuterDimensionsPluginOptions>) {
   return new WindowOuterDimensionsPlugin(pluginConfig)
 }

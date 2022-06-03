@@ -7,16 +7,16 @@ interface SourceurlPluginOption {}
  * Strip sourceURL from scripts injected by puppeteer.
  * It can be used to identify the presence of pptr via stacktraces.
  */
-class SourceurlPlugin extends PuppeteerExtraPlugin {
+class SourceurlPlugin extends PuppeteerExtraPlugin<SourceurlPluginOption> {
   constructor(opts: Partial<SourceurlPluginOption> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'stealth/evasions/sourceurl'
   }
 
-  async onPageCreated(page: Page) {
+  async onPageCreated(page: Page): Promise<void> {
     if (!page) {
       this.debug('Warning, missing properties to intercept CDP.', { page })
       return
@@ -74,6 +74,5 @@ class SourceurlPlugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function(pluginConfig: Partial<SourceurlPluginOption>) {
-  return new SourceurlPlugin(pluginConfig)
-}
+export default (pluginConfig: Partial<SourceurlPluginOption>) => new SourceurlPlugin(pluginConfig)
+

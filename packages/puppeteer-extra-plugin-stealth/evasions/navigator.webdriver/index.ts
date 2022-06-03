@@ -8,7 +8,7 @@ interface NavigatorWebdriverPluginOption {
  * Pass the Webdriver Test.
  * Will delete `navigator.webdriver` property.
  */
-class NavigatorWebdriverPlugin extends PuppeteerExtraPlugin {
+class NavigatorWebdriverPlugin extends PuppeteerExtraPlugin<NavigatorWebdriverPluginOption, {args: string[]}> {
   constructor(opts: Partial<NavigatorWebdriverPluginOption> = {}) {
     super(opts)
   }
