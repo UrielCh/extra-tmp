@@ -90,4 +90,4 @@ class REPLSession {
   }
 }
 
-export = REPLSession
+export default REPLSession

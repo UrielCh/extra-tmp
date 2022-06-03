@@ -44,9 +44,11 @@
     "puppeteer": "^2.0.0"
   },
   "dependencies": {
+    "@types/node": "^17.0.38",
     "chalk": "^3.0.0",
     "debug": "^4.1.1",
-    "ow": "^0.23.0",
+    "ow": "^0.27.0",
+    "puppeteer": "14.2.1",
     "puppeteer-extra-plugin": "^3.2.0"
   },
   "gitHead": "babb041828cab50c525e0b9aab02d58f73416ef3"

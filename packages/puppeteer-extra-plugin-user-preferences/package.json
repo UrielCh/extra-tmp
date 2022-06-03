@@ -33,6 +33,7 @@
   "dependencies": {
     "debug": "^4.1.1",
     "deepmerge": "^4.2.2",
+    "puppeteer": "^14.2.1",
     "puppeteer-extra-plugin": "^3.2.0",
     "puppeteer-extra-plugin-user-data-dir": "^2.3.1"
   },

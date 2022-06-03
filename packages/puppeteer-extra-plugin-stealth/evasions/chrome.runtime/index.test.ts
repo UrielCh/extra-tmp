@@ -141,7 +141,8 @@ test('stealth: will add convincing chrome.runtime.connect', async t => {
       try {
         return fn.apply(this, args)
       } catch (err) {
-        return err.toString()
+        //if (err instanceof Error) {
+        return (err as any).toString()
       }
     }
 

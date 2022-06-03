@@ -4,7 +4,6 @@ import REPLSession from './lib/REPLSession'
 
 interface PluginOptions { addToPuppeteerClass: boolean }
 
-
 /**
  * Interrupt your puppeteer code with an interactive REPL.
  *
@@ -96,6 +95,6 @@ class Plugin extends PuppeteerExtraPlugin {
   }
 }
 
-export = function(pluginConfig?: any) {
+export default function(pluginConfig?: any) {
   return new Plugin(pluginConfig)
 }

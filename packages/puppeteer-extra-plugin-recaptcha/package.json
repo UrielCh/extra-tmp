@@ -51,7 +51,6 @@
   "devDependencies": {
     "@types/debug": "^4.1.5",
     "@types/node": "^14.17.6",
-    "@types/puppeteer": "*",
     "ava": "3.15.0",
     "copyfiles": "^2.1.1",
     "npm-run-all": "^4.1.5",
@@ -64,14 +63,12 @@
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.25.2",
     "ts-node": "^8.5.4",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-config-standard": "^9.0.0",
     "typescript": "^4.4.3"
   },
   "dependencies": {
     "debug": "^4.1.1",
     "merge-deep": "^3.0.2",
+    "puppeteer": "^14.2.1",
     "puppeteer-extra-plugin": "^3.2.0"
   },
   "peerDependencies": {
