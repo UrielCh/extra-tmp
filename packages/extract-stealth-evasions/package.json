@@ -10,6 +10,9 @@
   "repository": "berstend/puppeteer-extra",
   "author": "berstend",
   "license": "MIT",
+  "scripts": {
+    "build": "node -e 0"
+  },
   "engines": {
     "node": ">=10"
   },
