@@ -111,7 +111,7 @@ puppeteer.use(
     provider: {
       id: '2captcha',
       token: 'ENTER_YOUR_2CAPTCHA_API_KEY_HERE'
-    },
+    }
   })
 )
 
@@ -237,7 +237,13 @@ interface PluginOptions {
 ### Result object
 
 ```js
-const { captchas, solutions, solved, error } = await page.solveRecaptchas()
+const {
+  captchas,
+  filtered,
+  solutions,
+  solved,
+  error
+} = await page.solveRecaptchas()
 ```
 
 - `captchas` is an array of captchas found in the page
@@ -259,7 +265,7 @@ let { solved, error } = await page.enterRecaptchaSolutions(solutions)
 
 ### Solving captchas in iframes
 
-By default the plugin will only solve reCAPTCHAs showing up on the immediate page. In case you encounter captchas in frames the plugin extends the `Puppeteer.Frame` object with custom methods as well (since `v3.1.5`):
+By default the plugin will only solve reCAPTCHAs showing up on the immediate page. In case you encounter captchas in frames the plugin extends the `Puppeteer.Frame` object with custom methods as well:
 
 ```js
 // Loop over all potential frames on that page
