@@ -9,7 +9,6 @@ export interface PluginOptions {
 }
 export interface PluginData {
   name: string,
-  //{[key: string]: any}
   value: {
     [key: string]: any
   }
