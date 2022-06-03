@@ -102,7 +102,7 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePlug
 
     // Source in C++: https://source.chromium.org/chromium/chromium/src/+/master:components/embedder_support/user_agent_utils.cc;l=55-100
     const _getBrands = () => {
-      const seed = Number(uaVersion.split('.')[0]) // the major version number of Chrome
+      const seed = uaVersion.split('.')[0] // the major version number of Chrome
 
       const order = [
         [0, 1, 2],
@@ -111,7 +111,7 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePlug
         [1, 2, 0],
         [2, 0, 1],
         [2, 1, 0]
-      ][seed % 6]
+      ][Number(seed) % 6]
       const escapedChars = [' ', ' ', ';']
 
       const greaseyBrand = `${escapedChars[order[0]]}Not${
