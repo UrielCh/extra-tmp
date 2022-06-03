@@ -27,7 +27,7 @@
     "test-ci": "run-s test",
     "ambient-dts": "run-s ambient-dts-copy ambient-dts-fix-path",
     "ambient-dts-copy": "copyfiles -u 1 \"src/**/*.d.ts\" dist",
-    "ambient-dts-fix-path": "replace-in-files --string='/// <reference path=\"../src/' --replacement='/// <reference path=\"../dist/' 'dist/**/*.d.ts'"
+    "ambient-dts-fix-path": "node ./post-replace.js"
   },
   "keywords": [
     "puppeteer",
@@ -44,10 +44,12 @@
     "node": ">=10"
   },
   "devDependencies": {
+    "@types/debug": "^4.1.0",
+    "@types/node": "^17.0.38",
     "ava": "3.15.0",
     "documentation-markdown-themes": "^12.1.5",
     "npm-run-all": "^4.1.5",
-    "puppeteer": "9",
+    "puppeteer": "^14.2.1",
     "puppeteer-extra-plugin": "^3.2.0",
     "puppeteer-extra-plugin-anonymize-ua": "^2.3.3",
     "rimraf": "^3.0.0",
@@ -63,10 +65,8 @@
     "puppeteer": "*"
   },
   "dependencies": {
-    "@types/debug": "^4.1.0",
     "debug": "^4.1.1",
-    "deepmerge": "^4.2.2",
-    "puppeteer": "^14.2.1"
+    "deepmerge": "^4.2.2"
   },
   "gitHead": "babb041828cab50c525e0b9aab02d58f73416ef3"
 }
