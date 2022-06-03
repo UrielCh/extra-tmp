@@ -9,7 +9,7 @@ export interface PluginOptions {}
  * Will also set the viewport to match window size, unless specified by user
  */
 class WindowOuterDimensionsPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

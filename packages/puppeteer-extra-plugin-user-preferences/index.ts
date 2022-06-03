@@ -29,11 +29,10 @@ export interface PluginOptions {
  * const browser = await puppeteer.launch()
  */
 class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
-  private _userPrefsFromPlugins: any;
+  private _userPrefsFromPlugins: any = {};
   
   constructor(opts?: Partial<PluginOptions>) {
     super(opts)
-    this._userPrefsFromPlugins = {}
   }
 
   get name(): string {

@@ -37,7 +37,7 @@ export interface PluginOptions { addToPuppeteerClass: boolean }
  * })
  */
 class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

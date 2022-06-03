@@ -31,7 +31,7 @@ export interface PluginOptions {
  *
  */
 class NavigatorVendorPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

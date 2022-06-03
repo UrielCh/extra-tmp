@@ -23,13 +23,11 @@ export interface PluginOptions {
  * https://chromium.googlesource.com/chromium/src/+/master/docs/user_data_dir.md
  */
 class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
-  private _userDataDir: string;
-  private _isTemporary: boolean;
+  private _userDataDir = '';
+  private _isTemporary = false;
 
   constructor(opts?: Partial<PluginOptions>) {
     super(opts)
-    this._userDataDir = ''
-    this._isTemporary = false
     debug('initialized', this.opts)
   }
 

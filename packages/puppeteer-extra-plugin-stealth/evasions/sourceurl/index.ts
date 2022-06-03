@@ -8,7 +8,7 @@ interface PluginOptions {}
  * It can be used to identify the presence of pptr via stacktraces.
  */
 class SourceurlPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

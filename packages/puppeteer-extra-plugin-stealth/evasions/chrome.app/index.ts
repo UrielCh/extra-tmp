@@ -9,7 +9,7 @@ interface PluginOptions {
  * Mock the `chrome.app` object if not available (e.g. when running headless).
  */
 class ChromeAppPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

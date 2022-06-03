@@ -9,7 +9,7 @@ interface PluginOptions {
  * Will delete `navigator.webdriver` property.
  */
 class NavigatorWebdriverPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

@@ -13,7 +13,7 @@ interface PluginOptions {
  * https://github.com/puppeteer/puppeteer/issues/1106
  */
 class IframeContentWindowPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

@@ -73,7 +73,7 @@ export interface PluginOptions {
  *
  */
 class StealthPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

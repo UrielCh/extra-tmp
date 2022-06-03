@@ -22,7 +22,7 @@ interface PluginOptions {}
  *
  */
 class ChromeCsiPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

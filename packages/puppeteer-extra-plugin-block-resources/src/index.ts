@@ -65,7 +65,7 @@ export interface PluginOptions {
  * await page.goto('http://www.youtube.com', {waitUntil: 'domcontentloaded'})
  */
 class BlockResourcesPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

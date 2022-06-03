@@ -18,7 +18,7 @@ export interface PluginOptions {
  * @param {string} [opts.renderer] - The renderer string (default: `Intel Iris OpenGL Engine`)
  */
 class WebGlVendorPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

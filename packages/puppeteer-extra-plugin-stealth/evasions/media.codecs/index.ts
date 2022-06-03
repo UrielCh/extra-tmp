@@ -9,7 +9,7 @@ export interface PluginOptions {}
  * (Chromium doesn't support proprietary codecs, only Chrome does)
  */
 class MediaCodecsPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

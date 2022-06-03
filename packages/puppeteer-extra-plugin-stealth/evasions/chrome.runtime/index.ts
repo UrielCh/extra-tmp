@@ -13,7 +13,7 @@ interface PluginOptions {
  * Mock the `chrome.runtime` object if not available (e.g. when running headless) and on a secure site.
  */
 class ChromeRuntimePlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

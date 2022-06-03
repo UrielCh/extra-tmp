@@ -27,7 +27,7 @@ export interface PluginOptions {}
  *
  */
 class ChromeLoadTimesPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

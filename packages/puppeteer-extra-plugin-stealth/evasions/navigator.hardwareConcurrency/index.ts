@@ -17,7 +17,7 @@ export interface PluginOptions {
  */
 
 class NavigatorHardwareConcurrencyPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

@@ -24,7 +24,7 @@ interface PluginOptions {
  * @see https://developer.mozilla.org/en-US/docs/Web/API/PluginArray
  */
 class NavigatorPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

@@ -45,12 +45,10 @@ interface PluginOptions {
  *
  */
 class UserAgentOverridePlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  private _headless?: boolean | 'chrome';
+  private _headless?: boolean | 'chrome' = false;
 
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
-
-    this._headless = false
   }
 
   get name(): string {

@@ -53,13 +53,11 @@ export interface PluginOptions {
  * })
  */
 class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
-  _browserSessions: {[key:string]: DevToolsTunnel};
+  // To store a wsEndpoint (= browser instance) > tunnel reference
+  _browserSessions: {[key:string]: DevToolsTunnel} = {};
 
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
-
-    // To store a wsEndpoint (= browser instance) > tunnel reference
-    this._browserSessions = {}
   }
 
   get name(): string {

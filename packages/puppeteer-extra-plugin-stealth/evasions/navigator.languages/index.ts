@@ -15,7 +15,7 @@ interface PluginOptions {
  * @param {Array<string>} [opts.languages] - The languages to use (default: `['en-US', 'en']`)
  */
 class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

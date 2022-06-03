@@ -13,7 +13,7 @@ interface PluginOptions {
  */
 
 class NavigatorPermissionsPlugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts: Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 

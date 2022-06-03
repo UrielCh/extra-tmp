@@ -10,7 +10,7 @@ interface PluginOptions {
  * Feel free to copy this folder as the basis for additional detection evasion plugins.
  */
 class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
-  constructor(opts:Partial<PluginOptions> = {}) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
   }
 
