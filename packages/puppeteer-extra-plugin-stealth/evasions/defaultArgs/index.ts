@@ -1,5 +1,7 @@
 import { PluginRequirements, PuppeteerExtraPlugin, PuppeteerLaunchOption } from 'puppeteer-extra-plugin'
 
+export interface PluginOptions {
+}
 
 export const argsToIgnore = [
   '--disable-extensions',
@@ -11,7 +13,7 @@ export const argsToIgnore = [
  * A CDP driver like puppeteer can make use of various browser launch arguments that are
  * adversarial to mimicking a regular browser and need to be stripped when launching the browser.
  */
-class Plugin extends PuppeteerExtraPlugin {
+class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
   constructor(opts = {}) {
     super(opts)
   }
@@ -40,4 +42,4 @@ class Plugin extends PuppeteerExtraPlugin {
   }
 }
 
-export default (pluginConfig: {}) => new Plugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new Plugin(pluginConfig)

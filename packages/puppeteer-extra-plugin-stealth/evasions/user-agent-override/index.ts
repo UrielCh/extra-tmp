@@ -2,7 +2,7 @@ import { CDPSession, Page } from 'puppeteer';
 import { PluginData, PluginDependencies, PuppeteerExtraPlugin, PuppeteerLaunchOption } from 'puppeteer-extra-plugin'
 
 
-interface UserAgentOverridePluginOption {
+interface PluginOptions {
   userAgent: string | null,
   locale: string,
   maskLinux: boolean,
@@ -44,10 +44,10 @@ interface UserAgentOverridePluginOption {
  * @param {boolean} [opts.maskLinux] - Wether to hide Linux as platform in the user agent or not - true by default
  *
  */
-class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePluginOption> {
+class UserAgentOverridePlugin extends PuppeteerExtraPlugin<PluginOptions> {
   private _headless?: boolean | 'chrome';
 
-  constructor(opts: Partial<UserAgentOverridePluginOption> = {}) {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
 
     this._headless = false
@@ -61,7 +61,7 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePlug
     return new Set(['user-preferences'])
   }
 
-  get defaults(): UserAgentOverridePluginOption {
+  get defaults(): PluginOptions {
     return {
       userAgent: null,
       locale: 'en-US,en',
@@ -209,4 +209,4 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePlug
   }
 }
 
-export default (opts: Partial<UserAgentOverridePluginOption>) => new UserAgentOverridePlugin(opts)
+export default (pluginConfig?: Partial<PluginOptions>) => new UserAgentOverridePlugin(pluginConfig)

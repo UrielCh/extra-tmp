@@ -4,7 +4,7 @@ import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 import { Page } from 'puppeteer'
 
-interface NavigatorLanguagesPluginOption {
+interface PluginOptions {
   languages: string[];
 }
 
@@ -14,8 +14,8 @@ interface NavigatorLanguagesPluginOption {
  * @param {Object} [opts] - Options
  * @param {Array<string>} [opts.languages] - The languages to use (default: `['en-US', 'en']`)
  */
-class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin<NavigatorLanguagesPluginOption> {
-  constructor(opts: Partial<NavigatorLanguagesPluginOption> = {}) {
+class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -23,7 +23,7 @@ class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin<NavigatorLanguagesPl
     return 'stealth/evasions/navigator.languages'
   }
 
-  get defaults(): NavigatorLanguagesPluginOption {
+  get defaults(): PluginOptions {
     return {
       languages: [] // Empty default, otherwise this would be merged with user defined array override
     }
@@ -31,7 +31,7 @@ class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin<NavigatorLanguagesPl
 
   async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument(
-      (utils: typeof Utils, { opts }: {opts: NavigatorLanguagesPluginOption}) => {
+      (utils: typeof Utils, { opts }: {opts: PluginOptions}) => {
         const languages: string[] = opts.languages.length
           ? opts.languages
           : ['en-US', 'en']
@@ -48,4 +48,4 @@ class NavigatorLanguagesPlugin extends PuppeteerExtraPlugin<NavigatorLanguagesPl
   }
 }
 
-export default (pluginConfig: Partial<NavigatorLanguagesPluginOption>) => new NavigatorLanguagesPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new NavigatorLanguagesPlugin(pluginConfig)

@@ -1,14 +1,14 @@
 import { CDPSession, Page } from 'puppeteer'
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 
-interface SourceurlPluginOption {}
+interface PluginOptions {}
 
 /**
  * Strip sourceURL from scripts injected by puppeteer.
  * It can be used to identify the presence of pptr via stacktraces.
  */
-class SourceurlPlugin extends PuppeteerExtraPlugin<SourceurlPluginOption> {
-  constructor(opts: Partial<SourceurlPluginOption> = {}) {
+class SourceurlPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -74,5 +74,5 @@ class SourceurlPlugin extends PuppeteerExtraPlugin<SourceurlPluginOption> {
   }
 }
 
-export default (pluginConfig: Partial<SourceurlPluginOption>) => new SourceurlPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new SourceurlPlugin(pluginConfig)
 

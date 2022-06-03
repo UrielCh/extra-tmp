@@ -3,7 +3,7 @@ import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import Utils from '../_utils'
 import withUtils from '../_utils/withUtils'
 
-export interface NavigatorVendorPluginOption {
+export interface PluginOptions {
   vendor: string;
 }
 
@@ -30,8 +30,8 @@ export interface NavigatorVendorPluginOption {
  * @param {string} [opts.vendor] - The vendor to use in `navigator.vendor` (default: `Google Inc.`)
  *
  */
-class NavigatorVendorPlugin extends PuppeteerExtraPlugin<NavigatorVendorPluginOption> {
-  constructor(opts: Partial<NavigatorVendorPluginOption> = {}) {
+class NavigatorVendorPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -39,7 +39,7 @@ class NavigatorVendorPlugin extends PuppeteerExtraPlugin<NavigatorVendorPluginOp
     return 'stealth/evasions/navigator.vendor'
   }
 
-  get defaults(): NavigatorVendorPluginOption {
+  get defaults(): PluginOptions {
     return {
       vendor: 'Google Inc.'
     }
@@ -51,7 +51,7 @@ class NavigatorVendorPlugin extends PuppeteerExtraPlugin<NavigatorVendorPluginOp
     })
 
     await withUtils(page).evaluateOnNewDocument(
-      (utils: typeof Utils, { opts }: {opts: NavigatorVendorPluginOption}) => {
+      (utils: typeof Utils, { opts }: {opts: PluginOptions}) => {
         utils.replaceGetterWithProxy(
           Object.getPrototypeOf(navigator),
           'vendor',
@@ -65,4 +65,4 @@ class NavigatorVendorPlugin extends PuppeteerExtraPlugin<NavigatorVendorPluginOp
   } // onPageCreated
 }
 
-export default (opts: Partial<NavigatorVendorPluginOption>) => new NavigatorVendorPlugin(opts)
+export default (pluginConfig?: Partial<PluginOptions>) => new NavigatorVendorPlugin(pluginConfig)

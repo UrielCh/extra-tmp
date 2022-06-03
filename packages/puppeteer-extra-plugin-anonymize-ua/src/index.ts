@@ -1,7 +1,7 @@
 import { Page } from 'puppeteer'
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 
-export interface AnonymizeUaOptiopns {
+export interface PluginOptions {
   stripHeadless: true,
   makeWindows: true,
   customFn: ((ua: string) => string) | null
@@ -26,7 +26,7 @@ export interface AnonymizeUaOptiopns {
  * )
  * const browser = await puppeteer.launch()
  */
-class Plugin extends PuppeteerExtraPlugin<AnonymizeUaOptiopns> {
+class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
   constructor(opts = {}) {
     super(opts)
   }
@@ -35,7 +35,7 @@ class Plugin extends PuppeteerExtraPlugin<AnonymizeUaOptiopns> {
     return 'anonymize-ua'
   }
 
-  get defaults(): AnonymizeUaOptiopns {
+  get defaults(): PluginOptions {
     return {
       stripHeadless: true,
       makeWindows: true,
@@ -59,4 +59,4 @@ class Plugin extends PuppeteerExtraPlugin<AnonymizeUaOptiopns> {
   }
 }
 
-export default (pluginConfig?: Partial<AnonymizeUaOptiopns>) => new Plugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new Plugin(pluginConfig)

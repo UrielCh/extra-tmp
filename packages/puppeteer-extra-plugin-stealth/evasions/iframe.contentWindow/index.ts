@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { PluginRequirements, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 
-interface IframeContentWindowPluginOption {
+interface PluginOptions {
 }
 
 /**
@@ -12,8 +12,8 @@ interface IframeContentWindowPluginOption {
  *
  * https://github.com/puppeteer/puppeteer/issues/1106
  */
-class IframeContentWindowPlugin extends PuppeteerExtraPlugin<IframeContentWindowPluginOption> {
-  constructor(opts: Partial<IframeContentWindowPluginOption> = {}) {
+class IframeContentWindowPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -133,4 +133,4 @@ class IframeContentWindowPlugin extends PuppeteerExtraPlugin<IframeContentWindow
   }
 }
 
-export default (pluginConfig: Partial<IframeContentWindowPluginOption>) => new IframeContentWindowPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new IframeContentWindowPlugin(pluginConfig)

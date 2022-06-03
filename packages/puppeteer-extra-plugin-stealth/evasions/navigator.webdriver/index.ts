@@ -1,15 +1,15 @@
 import Puppeteer from 'puppeteer'
 import { PuppeteerExtraPlugin, PuppeteerLaunchOption } from 'puppeteer-extra-plugin'
 
-interface NavigatorWebdriverPluginOption {
+interface PluginOptions {
 }
 
 /**
  * Pass the Webdriver Test.
  * Will delete `navigator.webdriver` property.
  */
-class NavigatorWebdriverPlugin extends PuppeteerExtraPlugin<NavigatorWebdriverPluginOption> {
-  constructor(opts: Partial<NavigatorWebdriverPluginOption> = {}) {
+class NavigatorWebdriverPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -47,6 +47,4 @@ class NavigatorWebdriverPlugin extends PuppeteerExtraPlugin<NavigatorWebdriverPl
   }
 }
 
-export = function(pluginConfig: Partial<NavigatorWebdriverPluginOption>) {
-  return new NavigatorWebdriverPlugin(pluginConfig)
-}
+export default (pluginConfig?: Partial<PluginOptions>) => new NavigatorWebdriverPlugin(pluginConfig)

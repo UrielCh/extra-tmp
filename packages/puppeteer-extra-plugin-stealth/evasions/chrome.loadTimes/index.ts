@@ -10,7 +10,7 @@ interface NtEntry {
   type: string;// 'other'
 }
 
-export interface ChromeLoadTimesPluginOption {}
+export interface PluginOptions {}
 /**
  * Mock the `chrome.loadTimes` function if not available (e.g. when running headless).
  * It's a deprecated (but unfortunately still existing) chrome specific API to fetch browser timings and connection info.
@@ -26,8 +26,8 @@ export interface ChromeLoadTimesPluginOption {}
  * @see `chrome.csi` evasion
  *
  */
-class ChromeLoadTimesPlugin extends PuppeteerExtraPlugin<ChromeLoadTimesPluginOption> {
-  constructor(opts: Partial<ChromeLoadTimesPluginOption> = {}) {
+class ChromeLoadTimesPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -37,7 +37,7 @@ class ChromeLoadTimesPlugin extends PuppeteerExtraPlugin<ChromeLoadTimesPluginOp
 
   async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument(
-      (utils: typeof Utils, { opts }: {opts: ChromeLoadTimesPluginOption}) => {
+      (utils: typeof Utils, { opts }: {opts: PluginOptions}) => {
         const {chrome} = window as any;
         if (!chrome) {
           // Use the exact property descriptor found in headful Chrome
@@ -173,4 +173,4 @@ class ChromeLoadTimesPlugin extends PuppeteerExtraPlugin<ChromeLoadTimesPluginOp
   }
 }
 
-export default (pluginConfig: Partial<ChromeLoadTimesPluginOption>) => new ChromeLoadTimesPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new ChromeLoadTimesPlugin(pluginConfig)

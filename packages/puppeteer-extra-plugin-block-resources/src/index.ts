@@ -22,7 +22,7 @@ interface HTTPRequest {
   continue(overrides?: ContinueRequestOverrides): Promise<void>;
 }
 
-export interface BlockResourcesOption {
+export interface PluginOptions {
   availableTypes: Set<string>,
   // Block nothing by default
   blockedTypes: Set<string>
@@ -64,8 +64,8 @@ export interface BlockResourcesOption {
  * blockResourcesPlugin.blockedTypes.add('script')
  * await page.goto('http://www.youtube.com', {waitUntil: 'domcontentloaded'})
  */
-class BlockResourcesPlugin extends PuppeteerExtraPlugin<BlockResourcesOption> {
-  constructor(opts: Partial<BlockResourcesOption> = {}) {
+class BlockResourcesPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -73,7 +73,7 @@ class BlockResourcesPlugin extends PuppeteerExtraPlugin<BlockResourcesOption> {
     return 'block-resources'
   }
 
-  get defaults(): BlockResourcesOption {
+  get defaults(): PluginOptions {
     return {
       availableTypes: new Set([
         'document',
@@ -137,4 +137,4 @@ class BlockResourcesPlugin extends PuppeteerExtraPlugin<BlockResourcesOption> {
   }
 }
 
-export default (pluginConfig?: Partial<BlockResourcesOption>) => new BlockResourcesPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new BlockResourcesPlugin(pluginConfig)

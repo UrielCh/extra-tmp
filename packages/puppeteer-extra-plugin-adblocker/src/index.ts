@@ -25,7 +25,7 @@ export interface PluginOptions {
 export class PuppeteerExtraPluginAdblocker extends PuppeteerExtraPlugin<PluginOptions> {
   private blocker: PuppeteerBlocker | undefined
 
-  constructor(opts: Partial<PluginOptions>) {
+  constructor(opts?: Partial<PluginOptions>) {
     super(opts)
     this.debug('Initialized', this.opts)
   }
@@ -132,6 +132,5 @@ export class PuppeteerExtraPluginAdblocker extends PuppeteerExtraPlugin<PluginOp
   }
 }
 
-export default (options: Partial<PluginOptions> = {}) => {
-  return new PuppeteerExtraPluginAdblocker(options)
-}
+export default (pluginConfig?: Partial<PluginOptions>) => new PuppeteerExtraPluginAdblocker(pluginConfig)
+

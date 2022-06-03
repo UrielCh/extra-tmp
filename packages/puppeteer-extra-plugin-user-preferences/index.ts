@@ -81,4 +81,4 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
   }
 }
 
-export default (pluginConfig: Partial<PluginOptions>) =>new Plugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) =>new Plugin(pluginConfig)

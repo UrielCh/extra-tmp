@@ -3,7 +3,7 @@ import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 import utilsGlobal from '../_utils'
 
-interface WebGlVendorPluginOption {
+export interface PluginOptions {
   vendor: string; 
   renderer: string;
 }
@@ -17,8 +17,8 @@ interface WebGlVendorPluginOption {
  * @param {string} [opts.vendor] - The vendor string to use (default: `Intel Inc.`)
  * @param {string} [opts.renderer] - The renderer string (default: `Intel Iris OpenGL Engine`)
  */
-class WebGlVendorPlugin extends PuppeteerExtraPlugin<WebGlVendorPluginOption> {
-  constructor(opts: Partial<WebGlVendorPluginOption> = {}) {
+class WebGlVendorPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -28,7 +28,7 @@ class WebGlVendorPlugin extends PuppeteerExtraPlugin<WebGlVendorPluginOption> {
 
   /* global WebGLRenderingContext WebGL2RenderingContext */
   async onPageCreated(page: Page): Promise<void> {
-    await withUtils(page).evaluateOnNewDocument((utils: typeof utilsGlobal, opts: WebGlVendorPluginOption) => {
+    await withUtils(page).evaluateOnNewDocument((utils: typeof utilsGlobal, opts: PluginOptions) => {
       const getParameterProxyHandler = {
         apply: function(target: any, ctx: any, args: any) {
           const param = (args || [])[0]
@@ -58,4 +58,4 @@ class WebGlVendorPlugin extends PuppeteerExtraPlugin<WebGlVendorPluginOption> {
   }
 }
 
-export = (pluginConfig: Partial<WebGlVendorPluginOption>) => new WebGlVendorPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new WebGlVendorPlugin(pluginConfig)

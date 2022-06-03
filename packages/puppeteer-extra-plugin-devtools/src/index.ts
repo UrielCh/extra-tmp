@@ -5,7 +5,7 @@ import { Browser, Page } from 'puppeteer';
 import { DevToolsTunnel } from './lib/RemoteDevTools'
 import crypto from 'crypto';
 
-export interface PluginOption {
+export interface PluginOptions {
   /**
    * The prefix to use for the localtunnel.me subdomain (default: 'devtools-tunnel')
    */
@@ -52,10 +52,10 @@ export interface PluginOption {
  *   // => tunnel url: https://devtools-tunnel-n9aogqwx3d.localtunnel.me
  * })
  */
-class Plugin extends PuppeteerExtraPlugin<PluginOption> {
+class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
   _browserSessions: {[key:string]: DevToolsTunnel};
 
-  constructor(opts: Partial<PluginOption> = {}) {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
 
     // To store a wsEndpoint (= browser instance) > tunnel reference
@@ -66,7 +66,7 @@ class Plugin extends PuppeteerExtraPlugin<PluginOption> {
     return 'devtools'
   }
 
-  get defaults(): PluginOption {
+  get defaults(): PluginOptions {
     return {
       prefix: 'devtools-tunnel',
       auth: {
@@ -255,4 +255,4 @@ class Tunnel extends RemoteDevTools.DevToolsTunnel {
   }
 }
 
-export default (pluginConfig?: Partial<PluginOption>) => new Plugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new Plugin(pluginConfig)

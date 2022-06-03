@@ -3,7 +3,7 @@ import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 import { Page } from 'puppeteer'
 
-export interface NavigatorHardwareConcurrencyPluginOption {
+export interface PluginOptions {
   hardwareConcurrency: number;
 }
 
@@ -16,8 +16,8 @@ export interface NavigatorHardwareConcurrencyPluginOption {
  * @param {number} [opts.hardwareConcurrency] - The value to use in `navigator.hardwareConcurrency` (default: `4`)
  */
 
-class NavigatorHardwareConcurrencyPlugin extends PuppeteerExtraPlugin<NavigatorHardwareConcurrencyPluginOption> {
-  constructor(opts: Partial<NavigatorHardwareConcurrencyPluginOption> = {}) {
+class NavigatorHardwareConcurrencyPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -25,7 +25,7 @@ class NavigatorHardwareConcurrencyPlugin extends PuppeteerExtraPlugin<NavigatorH
     return 'stealth/evasions/navigator.hardwareConcurrency'
   }
 
-  get defaults(): NavigatorHardwareConcurrencyPluginOption {
+  get defaults(): PluginOptions {
     return {
       hardwareConcurrency: 4
     }
@@ -33,7 +33,7 @@ class NavigatorHardwareConcurrencyPlugin extends PuppeteerExtraPlugin<NavigatorH
 
   async onPageCreated(page: Page): Promise<void> {
     await withUtils(page).evaluateOnNewDocument(
-      (utils: typeof Utils, { opts }: {opts: NavigatorHardwareConcurrencyPluginOption}) => {
+      (utils: typeof Utils, { opts }: {opts: PluginOptions}) => {
         utils.replaceGetterWithProxy(
           Object.getPrototypeOf(navigator),
           'hardwareConcurrency',
@@ -47,4 +47,4 @@ class NavigatorHardwareConcurrencyPlugin extends PuppeteerExtraPlugin<NavigatorH
   }
 }
 
-export default (pluginConfig: Partial<NavigatorHardwareConcurrencyPluginOption>) => new NavigatorHardwareConcurrencyPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new NavigatorHardwareConcurrencyPlugin(pluginConfig)

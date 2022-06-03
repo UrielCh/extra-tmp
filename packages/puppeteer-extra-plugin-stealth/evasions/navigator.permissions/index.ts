@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 
-interface NavigatorPermissionsPluginOption {
+interface PluginOptions {
 }
 
 /**
@@ -12,8 +12,8 @@ interface NavigatorPermissionsPluginOption {
  * @see https://bugs.chromium.org/p/chromium/issues/detail?id=1052332
  */
 
-class NavigatorPermissionsPlugin extends PuppeteerExtraPlugin<NavigatorPermissionsPluginOption> {
-  constructor(opts: Partial<NavigatorPermissionsPluginOption> = {}) {
+class NavigatorPermissionsPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -23,7 +23,7 @@ class NavigatorPermissionsPlugin extends PuppeteerExtraPlugin<NavigatorPermissio
 
   /* global Notification Permissions PermissionStatus */
   async onPageCreated(page: Page): Promise<void> {
-    await withUtils(page).evaluateOnNewDocument((utils: typeof Utils, opts: NavigatorPermissionsPluginOption) => {
+    await withUtils(page).evaluateOnNewDocument((utils: typeof Utils, opts: PluginOptions) => {
       const isSecure = document.location.protocol.startsWith('https')
 
       // In headful on secure origins the permission should be "default", not "denied"
@@ -67,4 +67,4 @@ class NavigatorPermissionsPlugin extends PuppeteerExtraPlugin<NavigatorPermissio
   }
 }
 
-export default (pluginConfig: Partial<NavigatorPermissionsPluginOption>) => new NavigatorPermissionsPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new NavigatorPermissionsPlugin(pluginConfig)

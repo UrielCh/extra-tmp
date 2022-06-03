@@ -10,7 +10,7 @@ import { generateFunctionMocks } from './functionMocks';
 
 const data = require('./data.json')
 
-interface NavigatorPluginOption {
+interface PluginOptions {
 }
 /**
  * In headless mode `navigator.mimeTypes` and `navigator.plugins` are empty.
@@ -23,8 +23,8 @@ interface NavigatorPluginOption {
  * @see https://developer.mozilla.org/en-US/docs/Web/API/NavigatorPlugins/plugins
  * @see https://developer.mozilla.org/en-US/docs/Web/API/PluginArray
  */
-class NavigatorPlugin extends PuppeteerExtraPlugin<NavigatorPluginOption> {
-  constructor(opts: Partial<NavigatorPluginOption> = {}) {
+class NavigatorPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
@@ -96,4 +96,4 @@ class NavigatorPlugin extends PuppeteerExtraPlugin<NavigatorPluginOption> {
   }
 }
 
-export default (pluginConfig: Partial<NavigatorPluginOption>) => new NavigatorPlugin(pluginConfig)
+export default (pluginConfig?: Partial<PluginOptions>) => new NavigatorPlugin(pluginConfig)
