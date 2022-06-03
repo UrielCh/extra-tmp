@@ -5,10 +5,6 @@ export interface PluginOptions {
   userPrefs: any;
 }
 
-const defaults = {
-  userPrefs: {}
-}
-
 /**
  * Launch puppeteer with arbitrary user preferences.
  *
@@ -35,8 +31,8 @@ const defaults = {
 class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
   private _userPrefsFromPlugins: any;
   
-  constructor(opts: Partial<PluginOptions> = {}) {
-    super(Object.assign(defaults, opts))
+  constructor(opts?: Partial<PluginOptions>) {
+    super(opts)
     this._userPrefsFromPlugins = {}
   }
 
@@ -45,7 +41,9 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
   }
 
   get defaults(): PluginOptions {
-    return defaults;
+    return {
+      userPrefs: {}
+    };
   }
 
   get requirements(): PluginRequirements {

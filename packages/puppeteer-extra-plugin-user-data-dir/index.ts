@@ -17,15 +17,6 @@ export interface PluginOptions {
   files: Array<{target: string}>;
 }
 
-
-const _defaults: PluginOptions = {
-  deleteTemporary: true,
-  deleteExisting: false,
-  folderPath: os.tmpdir(),
-  folderPrefix: 'puppeteer_dev_profile-',
-  files: []
-}
-
 /**
  *
  * Further reading:
@@ -35,18 +26,22 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
   private _userDataDir: string;
   private _isTemporary: boolean;
 
-
-  constructor(opts = {}) {
-    // Follow Puppeteers temporary user data dir naming convention by default
-    super(Object.assign(_defaults, opts))
-    // 
+  constructor(opts?: Partial<PluginOptions>) {
+    super(opts)
     this._userDataDir = ''
     this._isTemporary = false
-    // debug('initialized', this._opts)
+    debug('initialized', this.opts)
   }
 
   get defaults(): PluginOptions {
-    return _defaults
+    // Follow Puppeteers temporary user data dir naming convention by default
+    return {
+      deleteTemporary: true,
+      deleteExisting: false,
+      folderPath: os.tmpdir(),
+      folderPrefix: 'puppeteer_dev_profile-',
+      files: []
+    }
   }
 
   get name(): string {

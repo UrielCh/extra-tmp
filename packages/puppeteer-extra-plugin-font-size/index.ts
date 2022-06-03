@@ -1,4 +1,4 @@
-import PuppeteerExtraPlugin, { PluginData, PluginDependencies, PluginRequirements, PuppeteerLaunchOption } from 'puppeteer-extra-plugin'
+import PuppeteerExtraPlugin, { PluginData, PluginDependencies, PluginRequirements } from 'puppeteer-extra-plugin'
 
 export interface PluginOptions {
   defaultFontSize: number;
