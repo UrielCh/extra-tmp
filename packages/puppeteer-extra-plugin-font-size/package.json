@@ -8,6 +8,7 @@
   "license": "MIT",
   "scripts": {
     "docs": "node -e 0",
+    "build": "node -e 0",
     "lint": "eslint --ext .js .",
     "test": "run-p lint",
     "test-ci": "run-s test"
