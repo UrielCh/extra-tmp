@@ -1,7 +1,8 @@
 'use strict'
 
 const puppeteer = require('puppeteer-extra')
-puppeteer.use(require('puppeteer-extra-plugin-stealth')())
+
+puppeteer.use(require('puppeteer-extra-plugin-stealth').default())
 
 const detectHeadless = require('./detect-headless')
 

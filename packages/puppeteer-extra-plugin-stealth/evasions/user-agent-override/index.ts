@@ -1,5 +1,5 @@
 import { CDPSession, Page } from 'puppeteer';
-import { PluginData, PluginDependencies, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
+import { PluginData, PluginDependencies, PuppeteerExtraPlugin, PuppeteerLaunchOption } from 'puppeteer-extra-plugin'
 
 
 interface UserAgentOverridePluginOption {
@@ -44,8 +44,8 @@ interface UserAgentOverridePluginOption {
  * @param {boolean} [opts.maskLinux] - Wether to hide Linux as platform in the user agent or not - true by default
  *
  */
-class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePluginOption, {headless?: boolean}> {
-  private _headless?: boolean;
+class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePluginOption> {
+  private _headless?: boolean | 'chrome';
 
   constructor(opts: Partial<UserAgentOverridePluginOption> = {}) {
     super(opts)
@@ -187,7 +187,7 @@ class UserAgentOverridePlugin extends PuppeteerExtraPlugin<UserAgentOverridePlug
     client.send('Network.setUserAgentOverride', override)
   }
 
-  async beforeLaunch(options: {headless?: boolean}): Promise<void> {
+  async beforeLaunch(options: PuppeteerLaunchOption = {}): Promise<void> {
     // Check if launched headless
     this._headless = options.headless
   }

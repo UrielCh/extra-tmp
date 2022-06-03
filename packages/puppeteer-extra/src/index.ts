@@ -20,6 +20,15 @@ export interface VanillaPuppeteer
     | 'createBrowserFetcher'
   > {}
 
+export declare type PuppeteerLaunchOption = Parameters<VanillaPuppeteer['launch']>[0];
+
+export interface BrowserEventOptions {
+  context: 'launch' | 'connect';
+  options: PuppeteerLaunchOption;
+  defaultArgs?: (options?: Parameters<VanillaPuppeteer['defaultArgs']>[0]) => ReturnType<VanillaPuppeteer['defaultArgs']>
+}
+
+
 /**
  * Minimal plugin interface
  * @private
@@ -147,7 +156,7 @@ export class PuppeteerExtra implements VanillaPuppeteer {
    * @param options - See [puppeteer docs](https://github.com/puppeteer/puppeteer/blob/master/docs/api.md#puppeteerlaunchoptions).
    */
   async launch(
-    options?: Parameters<VanillaPuppeteer['launch']>[0]
+    options?: PuppeteerLaunchOption
   ): ReturnType<VanillaPuppeteer['launch']> {
     // Ensure there are certain properties (e.g. the `options.args` array)
     const defaultLaunchOptions = { args: [] }
@@ -158,7 +167,7 @@ export class PuppeteerExtra implements VanillaPuppeteer {
     // Give plugins the chance to modify the options before launch
     options = await this.callPluginsWithValue('beforeLaunch', options)
 
-    const opts = {
+    const opts: BrowserEventOptions = {
       context: 'launch',
       options,
       defaultArgs: this.defaultArgs
@@ -168,7 +177,7 @@ export class PuppeteerExtra implements VanillaPuppeteer {
     this.checkPluginRequirements(opts)
 
     const browser = await this.pptr.launch(options)
-    this._patchPageCreationMethods(browser as BrowserInternals)
+    this._patchPageCreationMethods(browser)
 
     await this.callPlugins('_bindBrowserEvents', browser, opts)
     return browser
@@ -193,13 +202,13 @@ export class PuppeteerExtra implements VanillaPuppeteer {
     // Give plugins the chance to modify the options before connect
     options = await this.callPluginsWithValue('beforeConnect', options)
 
-    const opts = { context: 'connect', options }
+    const opts: BrowserEventOptions = { context: 'connect', options }
 
     // Let's check requirements after plugin had the chance to modify the options
     this.checkPluginRequirements(opts)
 
     const browser = await this.pptr.connect(options)
-    this._patchPageCreationMethods(browser as BrowserInternals)
+    this._patchPageCreationMethods(browser)
 
     await this.callPlugins('_bindBrowserEvents', browser, opts)
     return browser
@@ -319,7 +328,7 @@ export class PuppeteerExtra implements VanillaPuppeteer {
    *
    * @private
    */
-  private getPluginsByProp(prop: string): PuppeteerExtraPlugin[] {
+  private getPluginsByProp(prop: '_bindBrowserEvents' | 'beforeLaunch' | 'beforeConnect'): PuppeteerExtraPlugin[] {
     return this._plugins.filter(plugin => prop in plugin)
   }
 
@@ -332,7 +341,7 @@ export class PuppeteerExtra implements VanillaPuppeteer {
    *
    * @private
    */
-  private resolvePluginDependencies() {
+  private resolvePluginDependencies(): void {
     // Request missing dependencies from all plugins and flatten to a single Set
     const missingPlugins = this._plugins
       .map(p => p._getMissingDependencies(this._plugins))
@@ -361,8 +370,15 @@ export class PuppeteerExtra implements VanillaPuppeteer {
       const packageName = name.split('/')[0]
       let dep = null
       try {
+        const req = require(name);
+        // use default export if available
+        if ('default' in req) {
+          dep = req.default()
+        } else {
+          dep = req()
+        }
         // Try to require and instantiate the stated dependency
-        dep = require(name)()
+        // dep = require(name)()
         // Register it with `puppeteer-extra` as plugin
         this.use(dep)
       } catch (err) {
@@ -394,7 +410,7 @@ export class PuppeteerExtra implements VanillaPuppeteer {
    *
    * @private
    */
-  private orderPlugins() {
+  private orderPlugins(): void {
     debug('orderPlugins:before', this.pluginNames)
     const runLast = this._plugins
       .filter(p => p.requirements.has('runLast'))
@@ -444,7 +460,8 @@ export class PuppeteerExtra implements VanillaPuppeteer {
    * @param values - Any number of values
    * @private
    */
-  private async callPlugins(prop: string, ...values: any[]) {
+  private async callPlugins(prop: '_bindBrowserEvents', browser: Browser, opts: BrowserEventOptions): Promise<void>;
+  private async callPlugins(prop: '_bindBrowserEvents', ...values: any[]): Promise<void> {
     for (const plugin of this.getPluginsByProp(prop)) {
       await plugin[prop].apply(plugin, values)
     }
@@ -457,12 +474,14 @@ export class PuppeteerExtra implements VanillaPuppeteer {
    * The plugins can either modify the value or return an updated one.
    * Will return the latest, updated value which ran through all plugins.
    *
-   * @param prop - The plugin property to call
+   * @param prop - The plugin property to call type: ChildClassMembers
    * @param value - Any value
    * @return The new updated value
    * @private
    */
-  private async callPluginsWithValue(prop: string, value: any) {
+   private async callPluginsWithValue(prop: 'beforeLaunch', value: PuppeteerLaunchOption): Promise<PuppeteerLaunchOption>;
+   private async callPluginsWithValue(prop: 'beforeConnect', value:  Parameters<VanillaPuppeteer['connect']>[0]): Promise<Parameters<VanillaPuppeteer['connect']>[0]>;
+   private async callPluginsWithValue(prop: 'beforeLaunch' | 'beforeConnect', value: PuppeteerLaunchOption | Parameters<VanillaPuppeteer['connect']>[0]) {
     for (const plugin of this.getPluginsByProp(prop)) {
       const newValue = await plugin[prop](value)
       if (newValue) {

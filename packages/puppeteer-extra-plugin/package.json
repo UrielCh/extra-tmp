@@ -46,6 +46,7 @@
   ],
   "devDependencies": {
     "@types/debug": "^4.1.0",
+    "@types/merge-deep": "^3.0.0",
     "@types/node": "^17.0.39",
     "ava": "3.15.0",
     "documentation-markdown-themes": "^12.1.5",
@@ -62,7 +63,8 @@
   },
   "dependencies": {
     "debug": "^4.1.1",
-    "merge-deep": "^3.0.1"
+    "merge-deep": "^3.0.1",
+    "puppeteer-extra": "^3.2.3"
   },
   "peerDependencies": {
     "puppeteer-extra": "*"

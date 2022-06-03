@@ -1,8 +1,9 @@
 import debug, { Debugger } from 'debug'
+import { VanillaPuppeteer, BrowserEventOptions } from 'puppeteer-extra'
 import * as Puppeteer from './puppeteer'
 
 /** @private */
-const merge = require('merge-deep')
+import merge from 'merge-deep'
 
 export interface PluginData {
   name: string,
@@ -13,6 +14,10 @@ export interface PluginData {
 
 export type PluginDependencies = Set<string>
 export type PluginRequirements = Set<'launch' | 'headful' | 'dataFromPlugins' | 'runLast'>
+
+export type ChildClassMembers = keyof PuppeteerExtraPlugin | 'constructor';
+
+export type PuppeteerLaunchOption =  Parameters<VanillaPuppeteer['launch']>[0];
 
 /**
  * Base class for `puppeteer-extra` plugins.
@@ -55,13 +60,13 @@ export type PluginRequirements = Set<'launch' | 'headful' | 'dataFromPlugins' | 
  * })()
  *
  */
-export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
+export abstract class PuppeteerExtraPlugin<OPTION = {}> {
   /** @private */
   private _debugBase: Debugger
   /** @private */
   private _opts: OPTION
   /** @private */
-  private _childClassMembers: string[]
+  private _childClassMembers: Array<ChildClassMembers>
 
   constructor(opts?: Partial<OPTION>) {
     this._debugBase = debug(`puppeteer-extra-plugin:base:${this.name}`)
@@ -246,7 +251,7 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
    *
    * @param options - Puppeteer launch options
    */
-  async beforeLaunch(options: Partial<PRE_OPTION>): Promise<void> {
+  async beforeLaunch(options: PuppeteerLaunchOption): Promise<void | PuppeteerLaunchOption> {
     // noop
   }
 
@@ -279,7 +284,7 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
    */
   async afterLaunch(
     browser: Puppeteer.Browser,
-    opts = { options: {} as Puppeteer.LaunchOptions }
+    opts: BrowserEventOptions // = { options: {} as Puppeteer.LaunchOptions }
   ): Promise<void> {
     // noop
   }
@@ -295,7 +300,7 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
    * @param  {Object} options - Puppeteer connect options
    * @return {Object=}
    */
-  async beforeConnect(options: Puppeteer.ConnectOptions): Promise<void> {
+  async beforeConnect(options: Puppeteer.ConnectOptions): Promise<void | Puppeteer.ConnectOptions> {
     // noop
   }
 
@@ -309,7 +314,7 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
    * @param  {Object} opts.options - Puppeteer connect options used.
    *
    */
-  async afterConnect(browser: Puppeteer.Browser, opts = {}): Promise<void> {
+  async afterConnect(browser: Puppeteer.Browser, opts: BrowserEventOptions): Promise<void> {
     // noop
   }
 
@@ -451,8 +456,8 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
    *
    * @private
    */
-  _getMissingDependencies(plugins: any): Set<string> {
-    const pluginNames = new Set(plugins.map((p: any) => p.name))
+  _getMissingDependencies(plugins: PuppeteerExtraPlugin[]): Set<string> {
+    const pluginNames = new Set(plugins.map((p: PuppeteerExtraPlugin) => p.name))
     const missing = new Set(
       Array.from(this.dependencies.values()).filter(x => !pluginNames.has(x))
     )
@@ -474,7 +479,7 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
    *
    * @private
    */
-  async _bindBrowserEvents(browser: Puppeteer.Browser, opts: any = {}): Promise<void> {
+  async _bindBrowserEvents(browser: Puppeteer.Browser, opts: BrowserEventOptions): Promise<void> {
     if (
       this._hasChildClassMember('onTargetCreated') ||
       this._hasChildClassMember('onPageCreated')
@@ -500,13 +505,13 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
         process.on('exit', this.onClose.bind(this))
         browser.on('disconnected', this.onClose.bind(this))
 
-        if (opts.options.handleSIGINT !== false) {
+        if (opts.options!.handleSIGINT !== false) {
           process.on('SIGINT', this.onClose.bind(this))
         }
-        if (opts.options.handleSIGTERM !== false) {
+        if (opts.options!.handleSIGTERM !== false) {
           process.on('SIGTERM', this.onClose.bind(this))
         }
-        if (opts.options.handleSIGHUP !== false) {
+        if (opts.options!.handleSIGHUP !== false) {
           process.on('SIGHUP', this.onClose.bind(this))
         }
       }
@@ -544,23 +549,25 @@ export abstract class PuppeteerExtraPlugin<OPTION = {}, PRE_OPTION = void> {
 
   /**
    * @private
+   * @param prototype is a prototype of the plugin class
    */
-  _register(prototype: any): void {
+  _register(prototype: typeof PuppeteerExtraPlugin.prototype): void {
     this._registerChildClassMembers(prototype)
     if (this.onPluginRegistered) this.onPluginRegistered()
   }
 
   /**
    * @private
+   * @param prototype is a prototype of the plugin class
    */
-  _registerChildClassMembers(prototype: any): void {
-    this._childClassMembers = Object.getOwnPropertyNames(prototype)
+  _registerChildClassMembers(prototype: typeof PuppeteerExtraPlugin.prototype): void {
+    this._childClassMembers = Object.getOwnPropertyNames(prototype) as Array<ChildClassMembers>
   }
 
   /**
    * @private
    */
-  _hasChildClassMember(name: string): boolean {
+  _hasChildClassMember(name: ChildClassMembers): boolean {
     return !!this._childClassMembers.includes(name)
   }
 

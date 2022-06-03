@@ -1,9 +1,5 @@
-import { PluginRequirements, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
+import { PluginRequirements, PuppeteerExtraPlugin, PuppeteerLaunchOption } from 'puppeteer-extra-plugin'
 
-
-export interface PluginOption {
-  ignoreDefaultArgs: string[] | true;
-}
 
 export const argsToIgnore = [
   '--disable-extensions',
@@ -15,7 +11,7 @@ export const argsToIgnore = [
  * A CDP driver like puppeteer can make use of various browser launch arguments that are
  * adversarial to mimicking a regular browser and need to be stripped when launching the browser.
  */
-class Plugin extends PuppeteerExtraPlugin<{}, PluginOption> {
+class Plugin extends PuppeteerExtraPlugin {
   constructor(opts = {}) {
     super(opts)
   }
@@ -28,7 +24,7 @@ class Plugin extends PuppeteerExtraPlugin<{}, PluginOption> {
     return new Set(['runLast']) // So other plugins can modify launch options before
   }
 
-  async beforeLaunch(options = {} as Partial<PluginOption>): Promise<void> {
+  async beforeLaunch(options: PuppeteerLaunchOption = {}): Promise<void> {
     options.ignoreDefaultArgs = options.ignoreDefaultArgs || []
     const ignoreDefaultArgs = options.ignoreDefaultArgs;
     if (ignoreDefaultArgs === true) {
