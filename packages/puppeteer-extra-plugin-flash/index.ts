@@ -1,6 +1,10 @@
-'use strict'
+import PuppeteerExtraPlugin, { PluginData, PluginDependencies, PluginRequirements, PuppeteerLaunchOption } from 'puppeteer-extra-plugin'
 
-const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
+export interface PluginOptions {
+  allowFlash: boolean;
+  pluginPath: string | null;
+  pluginVersion: number;
+}
 
 /**
  * Allow flash on all sites without user interaction.
@@ -16,8 +20,8 @@ const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
  *
  * @param {Object} opts - Options
  * @param {boolean} [opts.allowFlash=true] - Whether to allow flash content or not
- * @param {boolean} [opts.pluginPath=null] - Flash plugin path
- * @param {boolean} [opts.pluginVersion=9000] - Flash plugin version (9000 is high enough for Chrome not to complain)
+ * @param {string} [opts.pluginPath=null] - Flash plugin path
+ * @param {Number} [opts.pluginVersion=9000] - Flash plugin version (9000 is high enough for Chrome not to complain)
  *
  * @example
  * const puppeteer = require('puppeteer-extra')
@@ -28,16 +32,16 @@ const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
  *   await page.goto('http://ultrasounds.com', {waitUntil: 'domcontentloaded'})
  * })()
  */
-class Plugin extends PuppeteerExtraPlugin {
-  constructor(opts = {}) {
+class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
+  constructor(opts: Partial<PluginOptions> = {}) {
     super(opts)
   }
 
-  get name() {
+  get name(): string {
     return 'flash'
   }
 
-  get defaults() {
+  get defaults(): PluginOptions {
     return {
       allowFlash: true,
       pluginPath: null,
@@ -45,18 +49,19 @@ class Plugin extends PuppeteerExtraPlugin {
     }
   }
 
-  get requirements() {
+  get requirements(): PluginRequirements {
     return new Set(['launch', 'headful'])
   }
 
-  get dependencies() {
+  get dependencies(): PluginDependencies {
     return new Set(['user-preferences'])
   }
 
-  async beforeLaunch(options) {
+  async beforeLaunch(options: PuppeteerLaunchOption = {}): Promise<void | PuppeteerLaunchOption> {
     if (this.opts.allowFlash === false) {
       return
     }
+    options.args = options.args || [];
 
     if (this.opts.pluginPath) {
       options.args.push(`--ppapi-flash-path=${this.opts.pluginPath}`)
@@ -66,9 +71,9 @@ class Plugin extends PuppeteerExtraPlugin {
     }
   }
 
-  get data() {
+  get data(): PluginData[] {
     if (this.opts.allowFlash === false) {
-      return
+      return []
     }
     const allowFlashPreferences = {
       profile: {
@@ -87,6 +92,4 @@ class Plugin extends PuppeteerExtraPlugin {
   }
 }
 
-module.exports = function(pluginConfig) {
-  return new Plugin(pluginConfig)
-}
+export default (pluginConfig: Partial<PluginOptions>) =>new Plugin(pluginConfig)

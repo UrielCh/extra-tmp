@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
-const puppeteer = require('puppeteer-extra')
-const stealth = require('puppeteer-extra-plugin-stealth')()
-const { minify } = require('terser')
-const argv = require('yargs')
+import puppeteer from 'puppeteer-extra'
+import pluginStealth from 'puppeteer-extra-plugin-stealth'
+import { minify } from 'terser'
+import fs from 'fs'
+
+const stealth = pluginStealth();
+const argv: any = require('yargs')
   .usage('Usage: $0 [options]')
   .alias('e', 'exclude')
   .describe('e', 'Exclude evasion (repeat for multiple)')
@@ -17,7 +20,6 @@ const argv = require('yargs')
   .default('m', true)
   .help('h')
   .alias('h', 'help').argv
-const fs = require('fs')
 
 const file = 'stealth' + (argv.minify === true ? '.min' : '') + '.js'
 
@@ -25,17 +27,17 @@ if (argv.exclude) {
   if (typeof argv.exclude === 'string') {
     stealth.enabledEvasions.delete(argv.exclude)
   } else {
-    argv.exclude.forEach(e => {
+    argv.exclude.forEach((e: string) => {
       stealth.enabledEvasions.delete(e)
     })
   }
 } else if (argv.include) {
   if (typeof argv.include === 'string') {
-    stealth.enabledEvasions = [argv.include]
+    stealth.enabledEvasions = new Set([argv.include])
   } else {
-    stealth.enabledEvasions = []
-    argv.include.forEach(e => {
-      stealth.enabledEvasions.push(e)
+    stealth.enabledEvasions = new Set([])
+    argv.include.forEach((e: string) => {
+      stealth.enabledEvasions.add(e)
     })
   }
 } else if (argv.list) {
@@ -53,8 +55,8 @@ puppeteer
   .then(async browser => {
     // Patch evaluateOnNewDocument()
     const page = (await browser.pages()).find(Boolean)
-    page.__proto__.evaluateOnNewDocument = patchEval // eslint-disable-line no-proto
-    page.__proto__.evaluate = patchEval // eslint-disable-line no-proto
+    ;(page as any).__proto__.evaluateOnNewDocument = patchEval // eslint-disable-line no-proto
+    ;(page as any).__proto__.evaluate = patchEval // eslint-disable-line no-proto
 
     await (await browser.newPage()).goto('about:blank')
     await browser.close()
@@ -82,7 +84,7 @@ puppeteer
     )
   })
 
-function patchEval(f, args) {
+function patchEval(f: any, args: any) {
   // Check if there are options supplied
   if (typeof args !== 'undefined') {
     scripts += '(' + f.toString() + ')(' + JSON.stringify(args) + ');\n'

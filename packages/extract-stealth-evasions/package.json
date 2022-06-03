@@ -11,7 +11,8 @@
   "author": "berstend",
   "license": "MIT",
   "scripts": {
-    "build": "node -e 0"
+    "build": "npm run build:tsc",
+    "build:tsc": "tsc --module commonjs"
   },
   "engines": {
     "node": ">=10"
@@ -31,6 +32,7 @@
     "yargs": "^15.4.1"
   },
   "devDependencies": {
+    "@types/node": "^17.0.39",
     "puppeteer": "^14.2.1"
   }
 }
