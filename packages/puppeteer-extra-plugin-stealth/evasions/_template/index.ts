@@ -1,7 +1,7 @@
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import { Page } from 'puppeteer'
 
-interface PluginOptions {
+export interface PluginOptions {
 }
 
 /**
