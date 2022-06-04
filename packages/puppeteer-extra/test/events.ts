@@ -1,6 +1,7 @@
 import test from 'ava'
 
 const PUPPETEER_ARGS = ['--no-sandbox', '--disable-setuid-sandbox']
+declare const require: any;
 
 import puppeteerVanilla from 'puppeteer'
 import { addExtra } from 'puppeteer-extra'

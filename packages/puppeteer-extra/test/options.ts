@@ -4,6 +4,7 @@ import { PluginData, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import puppeteerVanilla from 'puppeteer'
 
 const PUPPETEER_ARGS: string[] = ['--no-sandbox', '--disable-setuid-sandbox']
+declare const require: any;
 
 beforeEach(t => {
   // Make sure we work with pristine modules
