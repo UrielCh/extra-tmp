@@ -21,9 +21,7 @@
     "docs": "documentation readme --quiet --shallow --github --markdown-theme transitivebs --readme-file readme.md --section API ./src/index.ts",
     "postdocs": "npx prettier --write readme.md",
     "lint": "eslint --ext .js .",
-    "test:ts": "ava -v --serial --concurrency 1 --config ava.config-ts.js",
-    "test:js": "ava -v --serial --concurrency 1",
-    "test": "run-p test:ts",
+    "test": "ava -v --serial --concurrency 1",
     "test-ci": "run-s test",
     "ambient-dts": "run-s ambient-dts-copy ambient-dts-fix-path",
     "ambient-dts-copy": "copyfiles -u 1 \"src/**/*.d.ts\" dist",
@@ -63,6 +61,15 @@
   },
   "peerDependencies": {
     "puppeteer": "*"
+  },
+  "ava": {
+      "environmentVariables": {
+        "TS_NODE_COMPILER_OPTIONS": "{\"module\":\"commonjs\"}"
+      },
+      "verbose": true,
+      "files": ["test/*.ts"],
+      "extensions": ["ts"],
+      "require": ["ts-node/register"]
   },
   "dependencies": {
     "debug": "^4.1.1",
