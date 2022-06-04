@@ -28,7 +28,7 @@ if (argv.exclude) {
     stealth.enabledEvasions.delete(argv.exclude)
   } else {
     argv.exclude.forEach((e: string) => {
-      stealth.enabledEvasions.delete(e)
+      stealth.enabledEvasions.delete(e as any)
     })
   }
 } else if (argv.include) {
@@ -37,7 +37,7 @@ if (argv.exclude) {
   } else {
     stealth.enabledEvasions = new Set([])
     argv.include.forEach((e: string) => {
-      stealth.enabledEvasions.add(e)
+      stealth.enabledEvasions.add(e as any)
     })
   }
 } else if (argv.list) {
