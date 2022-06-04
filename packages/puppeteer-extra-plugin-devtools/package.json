@@ -45,7 +45,8 @@
     "puppeteer": "^14.2.1",
     "puppeteer-extra": "^3.2.3",
     "ts-node": "^10.8.1",
-    "types": "^0.1.1"
+    "types": "^0.1.1",
+    "typescript": "^4.7.3"
   },
   "dependencies": {
     "@types/http-auth": "^4.1.0",

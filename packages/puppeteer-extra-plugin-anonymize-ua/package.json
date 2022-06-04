@@ -42,7 +42,8 @@
     "puppeteer": "^14.2.1",
     "puppeteer-extra": "^3.2.3",
     "puppeteer-extra-plugin-devtools": "^2.3.3",
-    "ts-node": "^10.8.1"
+    "ts-node": "^10.8.1",
+    "typescript": "^4.7.3"
   },
   "dependencies": {
     "debug": "^4.1.1",
