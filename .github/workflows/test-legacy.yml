@@ -72,8 +72,8 @@ jobs:
       - name: install puppeteer ${{ matrix.puppeteer_version }}
         run: yarn lerna add --dev puppeteer@${{ matrix.puppeteer_version }}
 
-      - name: 'add @types/puppeteer for pptr v8-'
-        run: yarn lerna add --dev @types/puppeteer
+      #- name: 'add @types/puppeteer for pptr v8-'
+      #  run: yarn lerna add --dev @types/puppeteer
 
       - name: lerna link
         run: yarn lerna link

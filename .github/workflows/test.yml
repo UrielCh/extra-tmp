@@ -59,8 +59,11 @@ jobs:
       - name: yarn install
         uses: bahmutov/npm-install@v1
 
+      #- name: 'Configuration for puppeteer ${{ matrix.puppeteer_version }}'
+      #  run: node configure.js ${{ matrix.puppeteer_version }}
+
       - name: 'Configuration for puppeteer ${{ matrix.puppeteer_version }}'
-        run: node configure.js ${{ matrix.puppeteer_version }}
+        run: yarn lerna add --dev puppeteer@${{ matrix.puppeteer_version }}
 
       - name: yarn bootstrap
         run: yarn bootstrap

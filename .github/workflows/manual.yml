@@ -12,14 +12,14 @@ on:
         # Friendly description to be shown in the UI instead of 'name'
         description: 'puppeteer version'
         # Default value if no value is explicitly provided
-        default: '8.0.0'
+        default: '14.2.1'
         # Input has to be provided for the workflow to run
         required: true
       node_version:
         # Friendly description to be shown in the UI instead of 'name'
         description: 'node version'
         # Default value if no value is explicitly provided
-        default: '15'
+        default: '16'
         # Input has to be provided for the workflow to run
         required: true
 
