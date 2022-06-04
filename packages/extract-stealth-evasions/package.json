@@ -33,6 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.39",
-    "puppeteer": "^14.2.1"
+    "puppeteer": "^14.2.1",
+    "ts-node": "^10.8.1"
   }
 }
