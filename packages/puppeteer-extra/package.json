@@ -66,6 +66,7 @@
       "environmentVariables": {
         "TS_NODE_COMPILER_OPTIONS": "{\"module\":\"commonjs\"}"
       },
+      "timeout": "2m",
       "verbose": true,
       "files": ["test/*.ts"],
       "extensions": ["ts"],

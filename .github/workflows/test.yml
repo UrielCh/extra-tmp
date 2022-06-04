@@ -61,11 +61,11 @@ jobs:
       #- name: 'Configuration for puppeteer ${{ matrix.puppeteer_version }}'
       #  run: node configure.js ${{ matrix.puppeteer_version }}
 
-      - name: 'Configuration for puppeteer ${{ matrix.puppeteer_version }}'
-        run: yarn lerna add --dev puppeteer@${{ matrix.puppeteer_version }}
-
       - name: yarn bootstrap
         run: yarn bootstrap
+
+      - name: 'Configuration for puppeteer ${{ matrix.puppeteer_version }}'
+        run: yarn lerna add --dev puppeteer@${{ matrix.puppeteer_version }}
 
       - name: lerna link
         run: yarn lerna link
