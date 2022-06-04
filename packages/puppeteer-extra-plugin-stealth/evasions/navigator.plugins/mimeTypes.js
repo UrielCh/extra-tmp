@@ -1,5 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.generateMimeTypeArray = void 0;
 /* global MimeType MimeTypeArray */
-
 /**
  * Generate a convincing and functional MimeTypeArray (with mime types) from scratch.
  *
@@ -8,11 +10,8 @@
  * @see https://developer.mozilla.org/en-US/docs/Web/API/NavigatorPlugins/mimeTypes
  * @see https://developer.mozilla.org/en-US/docs/Web/API/MimeTypeArray
  */
-module.exports.generateMimeTypeArray = (utils, fns) => mimeTypesData => {
-  return fns.generateMagicArray(utils, fns)(
-    mimeTypesData,
-    MimeTypeArray.prototype,
-    MimeType.prototype,
-    'type'
-  )
-}
+const generateMimeTypeArray = (utils, fns) => (mimeTypesData) => {
+    return fns.generateMagicArray(utils, fns)(mimeTypesData, MimeTypeArray.prototype, MimeType.prototype, 'type');
+};
+exports.generateMimeTypeArray = generateMimeTypeArray;
+//# sourceMappingURL=mimeTypes.js.map

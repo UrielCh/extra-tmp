@@ -334,6 +334,7 @@ export class PuppeteerExtraPluginRecaptcha extends PuppeteerExtraPlugin {
     prop.solveRecaptchas = async () => this.solveRecaptchas(prop)
   }
 
+  // @ts-ignore mutiple page definition
   async onPageCreated(page: Page) {
     this.debug('onPageCreated', page.url())
     // Make sure we can run our content script
@@ -350,6 +351,7 @@ export class PuppeteerExtraPluginRecaptcha extends PuppeteerExtraPlugin {
   }
 
   /** Add additions to already existing pages and frames */
+  // @ts-ignore mutiple Browser definition
   async onBrowser(browser: Browser) {
     const pages = await browser.pages()
     for (const page of pages) {

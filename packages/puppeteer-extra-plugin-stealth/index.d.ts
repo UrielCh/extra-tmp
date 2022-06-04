@@ -1,8 +1,14 @@
-export = defaultExport;
-declare function defaultExport(opts?: {
-    enabledEvasions?: Set<string>;
-}): StealthPlugin;
-declare const StealthPlugin_base: typeof import("puppeteer-extra-plugin").PuppeteerExtraPlugin;
+import Puppeteer from 'puppeteer';
+import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin';
+export declare const allAvailableEvasions: readonly ["chrome.app", "chrome.csi", "chrome.loadTimes", "chrome.runtime", "defaultArgs", "iframe.contentWindow", "media.codecs", "navigator.hardwareConcurrency", "navigator.languages", "navigator.permissions", "navigator.plugins", "navigator.webdriver", "sourceurl", "user-agent-override", "webgl.vendor", "window.outerdimensions"];
+export declare type KnownEvasions = typeof allAvailableEvasions[number];
+/**
+ * Specify which evasions to use (by default all)
+ */
+export interface PluginOptions {
+    availableEvasions: Set<KnownEvasions>;
+    enabledEvasions: Set<KnownEvasions>;
+}
 /**
  * Stealth mode: Applies various techniques to make detection of headless puppeteer harder. 💯
  *
@@ -66,16 +72,17 @@ declare const StealthPlugin_base: typeof import("puppeteer-extra-plugin").Puppet
  *   await browser.close()
  * })()
  *
- * @param {Object} [opts] - Options
- * @param {Set<string>} [opts.enabledEvasions] - Specify which evasions to use (by default all)
- *
  */
-declare class StealthPlugin extends StealthPlugin_base {
-    constructor(opts?: {});
-    get defaults(): {
-        availableEvasions: Set<string>;
-        enabledEvasions: Set<any>;
-    };
+declare class StealthPlugin extends PuppeteerExtraPlugin<PluginOptions> {
+    constructor(opts?: Partial<PluginOptions>);
+    get name(): 'stealth';
+    get defaults(): PluginOptions;
+    /**
+     * Requires evasion techniques dynamically based on configuration.
+     *
+     * @private
+     */
+    get dependencies(): Set<`stealth/evasions/${KnownEvasions}`>;
     /**
      * Get all available evasions.
      *
@@ -88,11 +95,7 @@ declare class StealthPlugin extends StealthPlugin_base {
      * console.log(pluginStealth.availableEvasions) // => Set { 'user-agent', 'console.debug' }
      * puppeteer.use(pluginStealth)
      */
-    get availableEvasions(): Set<string>;
-    /**
-     * @private
-     */
-    set enabledEvasions(arg: Set<string>);
+    get availableEvasions(): Set<KnownEvasions>;
     /**
      * Get all enabled evasions.
      *
@@ -106,6 +109,18 @@ declare class StealthPlugin extends StealthPlugin_base {
      * pluginStealth.enabledEvasions.delete('console.debug')
      * puppeteer.use(pluginStealth)
      */
-    get enabledEvasions(): Set<string>;
-    onBrowser(browser: any): Promise<void>;
+    get enabledEvasions(): Set<KnownEvasions>;
+    /**
+     * @private
+     */
+    set enabledEvasions(evasions: Set<KnownEvasions>);
+    onBrowser(browser: Puppeteer.Browser): Promise<void>;
 }
+/**
+ * Default export, PuppeteerExtraStealthPlugin
+ *
+ * @param {Object} [opts] - Options
+ * @param {Set<string>} [opts.enabledEvasions] - Specify which evasions to use (by default all)
+ */
+declare const _default: (pluginConfig?: Partial<PluginOptions>) => StealthPlugin;
+export default _default;

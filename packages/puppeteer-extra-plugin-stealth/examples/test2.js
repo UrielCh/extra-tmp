@@ -2,7 +2,8 @@
 
 const puppeteer = require('puppeteer-extra')
 // Enable stealth plugin
-puppeteer.use(require('puppeteer-extra-plugin-stealth')())
+const stealth = require('puppeteer-extra-plugin-stealth').default();
+puppeteer.use(stealth)
 ;(async () => {
   // Launch the browser in headless mode and set up a page.
   const browser = await puppeteer.launch({

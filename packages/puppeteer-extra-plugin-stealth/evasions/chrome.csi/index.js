@@ -1,9 +1,10 @@
-'use strict'
-
-const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
-
-const withUtils = require('../_utils/withUtils')
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const puppeteer_extra_plugin_1 = require("puppeteer-extra-plugin");
+const withUtils_1 = __importDefault(require("../_utils/withUtils"));
 /**
  * Mock the `chrome.csi` function if not available (e.g. when running headless).
  * It's a deprecated (but unfortunately still existing) chrome specific API to fetch browser timings.
@@ -21,53 +22,47 @@ const withUtils = require('../_utils/withUtils')
  * @see `chrome.loadTimes` evasion
  *
  */
-class Plugin extends PuppeteerExtraPlugin {
-  constructor(opts = {}) {
-    super(opts)
-  }
-
-  get name() {
-    return 'stealth/evasions/chrome.csi'
-  }
-
-  async onPageCreated(page) {
-    await withUtils(page).evaluateOnNewDocument(utils => {
-      if (!window.chrome) {
-        // Use the exact property descriptor found in headful Chrome
-        // fetch it via `Object.getOwnPropertyDescriptor(window, 'chrome')`
-        Object.defineProperty(window, 'chrome', {
-          writable: true,
-          enumerable: true,
-          configurable: false, // note!
-          value: {} // We'll extend that later
-        })
-      }
-
-      // That means we're running headful and don't need to mock anything
-      if ('csi' in window.chrome) {
-        return // Nothing to do here
-      }
-
-      // Check that the Navigation Timing API v1 is available, we need that
-      if (!window.performance || !window.performance.timing) {
-        return
-      }
-
-      const { timing } = window.performance
-
-      window.chrome.csi = function() {
-        return {
-          onloadT: timing.domContentLoadedEventEnd,
-          startE: timing.navigationStart,
-          pageT: Date.now() - timing.navigationStart,
-          tran: 15 // Transition type or something
-        }
-      }
-      utils.patchToString(window.chrome.csi)
-    })
-  }
+class ChromeCsiPlugin extends puppeteer_extra_plugin_1.PuppeteerExtraPlugin {
+    constructor(opts) {
+        super(opts);
+    }
+    get name() {
+        return 'stealth/evasions/chrome.csi';
+    }
+    async onPageCreated(page) {
+        await (0, withUtils_1.default)(page).evaluateOnNewDocument((utils) => {
+            const chrome = window.chrome;
+            if (!chrome) {
+                // Use the exact property descriptor found in headful Chrome
+                // fetch it via `Object.getOwnPropertyDescriptor(window, 'chrome')`
+                Object.defineProperty(window, 'chrome', {
+                    writable: true,
+                    enumerable: true,
+                    configurable: false,
+                    value: {} // We'll extend that later
+                });
+            }
+            // That means we're running headful and don't need to mock anything
+            if ('csi' in window.chrome) {
+                return; // Nothing to do here
+            }
+            // Check that the Navigation Timing API v1 is available, we need that
+            const performance = window.performance;
+            if (!performance || !performance.timing) {
+                return;
+            }
+            const { timing } = performance;
+            chrome.csi = function () {
+                return {
+                    onloadT: timing.domContentLoadedEventEnd,
+                    startE: timing.navigationStart,
+                    pageT: Date.now() - timing.navigationStart,
+                    tran: 15 // Transition type or something
+                };
+            };
+            utils.patchToString(chrome.csi);
+        });
+    }
 }
-
-module.exports = function(pluginConfig) {
-  return new Plugin(pluginConfig)
-}
+exports.default = (pluginConfig) => new ChromeCsiPlugin(pluginConfig);
+//# sourceMappingURL=index.js.map

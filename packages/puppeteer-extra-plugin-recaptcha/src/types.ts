@@ -4,7 +4,7 @@
 /**
  * Extend window object with recaptcha things
  */
-declare global {
+ declare global {
   interface Window {
     __google_recaptcha_client?: boolean
     ___grecaptcha_cfg?: {

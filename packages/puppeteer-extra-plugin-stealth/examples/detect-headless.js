@@ -4,7 +4,7 @@
 // initial detects from @antoinevastel
 //   http://antoinevastel.github.io/bot%20detection/2018/01/17/detect-chrome-headless-v2.html
 
-module.exports = async function() {
+const detectHeadLess = async function() {
   const results = {}
 
   async function test(name, fn) {
@@ -95,3 +95,5 @@ module.exports = async function() {
 
   return results
 }
+
+module.exports = detectHeadLess

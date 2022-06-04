@@ -10,8 +10,12 @@
   "repository": "berstend/puppeteer-extra",
   "author": "berstend",
   "license": "MIT",
+  "scripts": {
+    "build": "npm run build:tsc",
+    "build:tsc": "tsc --module commonjs"
+  },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "keywords": [
     "puppeteer",
@@ -22,10 +26,13 @@
     "pupeteer"
   ],
   "dependencies": {
-    "puppeteer": "*",
     "puppeteer-extra": "^3.2.1",
     "puppeteer-extra-plugin-stealth": "^2.9.0",
     "terser": "^5.1.0",
     "yargs": "^15.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.39",
+    "puppeteer": "^14.2.1"
   }
 }

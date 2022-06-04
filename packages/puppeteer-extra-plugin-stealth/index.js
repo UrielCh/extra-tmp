@@ -1,7 +1,25 @@
-'use strict'
-
-const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
-
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.allAvailableEvasions = void 0;
+const puppeteer_extra_plugin_1 = require("puppeteer-extra-plugin");
+exports.allAvailableEvasions = [
+    'chrome.app',
+    'chrome.csi',
+    'chrome.loadTimes',
+    'chrome.runtime',
+    'defaultArgs',
+    'iframe.contentWindow',
+    'media.codecs',
+    'navigator.hardwareConcurrency',
+    'navigator.languages',
+    'navigator.permissions',
+    'navigator.plugins',
+    'navigator.webdriver',
+    'sourceurl',
+    'user-agent-override',
+    'webgl.vendor',
+    'window.outerdimensions'
+];
 /**
  * Stealth mode: Applies various techniques to make detection of headless puppeteer harder. 💯
  *
@@ -65,113 +83,79 @@ const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
  *   await browser.close()
  * })()
  *
- * @param {Object} [opts] - Options
- * @param {Set<string>} [opts.enabledEvasions] - Specify which evasions to use (by default all)
- *
  */
-class StealthPlugin extends PuppeteerExtraPlugin {
-  constructor(opts = {}) {
-    super(opts)
-  }
-
-  get name() {
-    return 'stealth'
-  }
-
-  get defaults() {
-    const availableEvasions = new Set([
-      'chrome.app',
-      'chrome.csi',
-      'chrome.loadTimes',
-      'chrome.runtime',
-      'defaultArgs',
-      'iframe.contentWindow',
-      'media.codecs',
-      'navigator.hardwareConcurrency',
-      'navigator.languages',
-      'navigator.permissions',
-      'navigator.plugins',
-      'navigator.webdriver',
-      'sourceurl',
-      'user-agent-override',
-      'webgl.vendor',
-      'window.outerdimensions'
-    ])
-    return {
-      availableEvasions,
-      // Enable all available evasions by default
-      enabledEvasions: new Set([...availableEvasions])
+class StealthPlugin extends puppeteer_extra_plugin_1.PuppeteerExtraPlugin {
+    constructor(opts) {
+        super(opts);
     }
-  }
-
-  /**
-   * Requires evasion techniques dynamically based on configuration.
-   *
-   * @private
-   */
-  get dependencies() {
-    return new Set(
-      [...this.opts.enabledEvasions].map(e => `${this.name}/evasions/${e}`)
-    )
-  }
-
-  /**
-   * Get all available evasions.
-   *
-   * Please look into the [evasions directory](./evasions/) for an up to date list.
-   *
-   * @type {Set<string>} - A Set of all available evasions.
-   *
-   * @example
-   * const pluginStealth = require('puppeteer-extra-plugin-stealth')()
-   * console.log(pluginStealth.availableEvasions) // => Set { 'user-agent', 'console.debug' }
-   * puppeteer.use(pluginStealth)
-   */
-  get availableEvasions() {
-    return this.defaults.availableEvasions
-  }
-
-  /**
-   * Get all enabled evasions.
-   *
-   * Enabled evasions can be configured either through `opts` or by modifying this property.
-   *
-   * @type {Set<string>} - A Set of all enabled evasions.
-   *
-   * @example
-   * // Remove specific evasion from enabled ones dynamically
-   * const pluginStealth = require('puppeteer-extra-plugin-stealth')()
-   * pluginStealth.enabledEvasions.delete('console.debug')
-   * puppeteer.use(pluginStealth)
-   */
-  get enabledEvasions() {
-    return this.opts.enabledEvasions
-  }
-
-  /**
-   * @private
-   */
-  set enabledEvasions(evasions) {
-    this.opts.enabledEvasions = evasions
-  }
-
-  async onBrowser(browser) {
-    if (browser && browser.setMaxListeners) {
-      // Increase event emitter listeners to prevent MaxListenersExceededWarning
-      browser.setMaxListeners(30)
+    get name() {
+        return 'stealth';
     }
-  }
+    get defaults() {
+        const availableEvasions = new Set(exports.allAvailableEvasions);
+        return {
+            availableEvasions,
+            // Enable all available evasions by default
+            enabledEvasions: new Set(availableEvasions)
+        };
+    }
+    /**
+     * Requires evasion techniques dynamically based on configuration.
+     *
+     * @private
+     */
+    get dependencies() {
+        return new Set([...this.opts.enabledEvasions].map((e) => `${this.name}/evasions/${e}`));
+    }
+    /**
+     * Get all available evasions.
+     *
+     * Please look into the [evasions directory](./evasions/) for an up to date list.
+     *
+     * @type {Set<string>} - A Set of all available evasions.
+     *
+     * @example
+     * const pluginStealth = require('puppeteer-extra-plugin-stealth')()
+     * console.log(pluginStealth.availableEvasions) // => Set { 'user-agent', 'console.debug' }
+     * puppeteer.use(pluginStealth)
+     */
+    get availableEvasions() {
+        return this.defaults.availableEvasions;
+    }
+    /**
+     * Get all enabled evasions.
+     *
+     * Enabled evasions can be configured either through `opts` or by modifying this property.
+     *
+     * @type {Set<string>} - A Set of all enabled evasions.
+     *
+     * @example
+     * // Remove specific evasion from enabled ones dynamically
+     * const pluginStealth = require('puppeteer-extra-plugin-stealth')()
+     * pluginStealth.enabledEvasions.delete('console.debug')
+     * puppeteer.use(pluginStealth)
+     */
+    get enabledEvasions() {
+        return this.opts.enabledEvasions;
+    }
+    /**
+     * @private
+     */
+    set enabledEvasions(evasions) {
+        this.opts.enabledEvasions = evasions;
+    }
+    async onBrowser(browser) {
+        if (browser && browser.setMaxListeners) {
+            // Increase event emitter listeners to prevent MaxListenersExceededWarning
+            browser.setMaxListeners(30);
+        }
+    }
 }
-
 /**
  * Default export, PuppeteerExtraStealthPlugin
  *
  * @param {Object} [opts] - Options
  * @param {Set<string>} [opts.enabledEvasions] - Specify which evasions to use (by default all)
  */
-const defaultExport = opts => new StealthPlugin(opts)
-module.exports = defaultExport
-
-// const moduleExport = defaultExport
-// moduleExport.StealthPlugin = StealthPlugin
-// module.exports = moduleExport
+exports.default = (pluginConfig) => new StealthPlugin(pluginConfig);
+//# sourceMappingURL=index.js.map

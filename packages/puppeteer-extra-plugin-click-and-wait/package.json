@@ -1,19 +1,28 @@
 {
   "name": "puppeteer-extra-plugin-click-and-wait",
-  "version": "2.3.0",
+  "version": "2.2.9",
   "description": "Convenience function to wait for navigation to complete after clicking on an element.",
   "main": "index.js",
   "repository": "berstend/puppeteer-extra",
   "author": "berstend",
   "license": "MIT",
   "scripts": {
+    "clean": "rimraf dist/*",
+    "tscheck": "tsc --pretty --noEmit",
+    "prebuild": "run-s clean",
+    "build": "run-s build:tsc",
+    "build:tsc": "tsc --module commonjs",
+    "build:rollup": "rollup -c rollup.config.ts",
     "docs": "node -e 0",
     "lint": "eslint --ext .js .",
-    "test": "run-p lint",
+    "test:js": "ava -v --serial --concurrency 1 --fail-fast",
+    "test:ts": "ava -v --serial --concurrency 1 --fail-fast --config ava.config-ts.js",
+    "test": "node -e 0",
+    "pretest-ci": "run-s build",
     "test-ci": "run-s test"
   },
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "keywords": [
     "puppeteer",
@@ -25,12 +34,14 @@
     "pupeteer"
   ],
   "devDependencies": {
-    "ava": "2.4.0",
+    "@types/node": "^17.0.38",
+    "ava": "3.15.0",
     "npm-run-all": "^4.1.5",
-    "puppeteer": "^2.0.0"
+    "puppeteer": "^14.2.1"
   },
   "dependencies": {
     "debug": "^4.1.1",
+    "puppeteer-extra": "^3.1.18",
     "puppeteer-extra-plugin": "^3.2.0"
   },
   "gitHead": "babb041828cab50c525e0b9aab02d58f73416ef3"

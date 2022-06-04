@@ -34,7 +34,6 @@ puppeteer
     console.log('Start')
     const tunnel = await devtools.createTunnel(browser)
     console.log(tunnel.url)
-
     const page = await browser.newPage()
     await page.goto('https://example.com')
     console.log('All setup.')
@@ -47,14 +46,21 @@ puppeteer
 
 #### Table of Contents
 
-- [Plugin](#plugin)
-  - [createTunnel](#createtunnel)
-  - [setAuthCredentials](#setauthcredentials)
-  - [getLocalDevToolsUrl](#getlocaldevtoolsurl)
-- [Tunnel](#tunnel)
-  - [url](#url)
-  - [getUrlForPage](#geturlforpage)
-  - [close](#close)
+- [puppeteer-extra-plugin-devtools](#puppeteer-extra-plugin-devtools)
+  - [Installation](#installation)
+  - [Purpose](#purpose)
+  - [Magic](#magic)
+  - [Quickstart](#quickstart)
+  - [API](#api)
+      - [Table of Contents](#table-of-contents)
+    - [Plugin](#plugin)
+      - [createTunnel](#createtunnel)
+      - [setAuthCredentials](#setauthcredentials)
+      - [getLocalDevToolsUrl](#getlocaldevtoolsurl)
+    - [Tunnel](#tunnel)
+      - [url](#url)
+      - [getUrlForPage](#geturlforpage)
+      - [close](#close)
 
 ### [Plugin](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L34-L168)
 
@@ -112,12 +118,13 @@ const puppeteer = require('puppeteer-extra')
 const devtools = require('puppeteer-extra-plugin-devtools')()
 devtools.setAuthCredentials('bob', 'swordfish')
 puppeteer.use(devtools)
+
 ;(async () => {
   const browserFleet = await Promise.all(
     [...Array(3)].map(slot => puppeteer.launch())
   )
   for (const [index, browser] of browserFleet.entries()) {
-    const { url } = await devtools.createTunnel(browser)
+    const {url} = await devtools.createTunnel(browser)
     console.info(`Browser ${index}'s devtools frontend can be found at: ${url}`)
   }
 })()
@@ -153,7 +160,7 @@ puppeteer.launch().then(async browser => {
 })
 ```
 
----
+* * *
 
 #### [getLocalDevToolsUrl](https://github.com/berstend/puppeteer-extra/blob/db57ea66cf10d407cf63af387892492e495a84f2/packages/puppeteer-extra-plugin-devtools/index.js#L137-L142)
 
@@ -161,7 +168,7 @@ Convenience function to get the local devtools frontend URL.
 
 Type: `function (browser): string`
 
-- `browser` **Puppeteer.Browser**
+-   `browser` **Puppeteer.Browser** 
 
 Example:
 
@@ -241,4 +248,4 @@ const tunnel = await devtools.createTunnel(browser)
 tunnel.close()
 ```
 
----
+* * *

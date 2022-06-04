@@ -13,19 +13,21 @@
   ],
   "scripts": {
     "clean": "rimraf dist/*",
+    "tscheck": "tsc --pretty --noEmit",
     "prebuild": "run-s clean",
     "build": "run-s build:tsc build:rollup ambient-dts",
     "build:tsc": "tsc --module commonjs",
     "build:rollup": "rollup -c rollup.config.ts",
     "docs": "documentation readme --quiet --shallow --github --markdown-theme transitivebs --readme-file readme.md --section API ./src/index.ts",
     "postdocs": "npx prettier --write readme.md",
-    "test:ts": "ava -v --config ava.config-ts.js",
+    "lint": "eslint --ext .js .",
+    "test:ts": "ava -v --serial --concurrency 1 --fail-fast --config ava.config-ts.js",
     "test:js": "ava -v --serial --concurrency 1 --fail-fast",
-    "test": "run-p test:js test:ts",
+    "test": "run-p test:ts",
     "test-ci": "run-s test",
     "ambient-dts": "run-s ambient-dts-copy ambient-dts-fix-path",
     "ambient-dts-copy": "copyfiles -u 1 \"src/**/*.d.ts\" dist",
-    "ambient-dts-fix-path": "replace-in-files --string='/// <reference path=\"../src/' --replacement='/// <reference path=\"../dist/' 'dist/**/*.d.ts'"
+    "ambient-dts-fix-path": "node ./post-replace.js"
   },
   "keywords": [
     "puppeteer",
@@ -39,16 +41,17 @@
     "pupeteer"
   ],
   "engines": {
-    "node": ">=8"
+    "node": ">=10"
   },
   "devDependencies": {
-    "ava": "^2.4.0",
+    "@types/debug": "^4.1.0",
+    "@types/node": "^17.0.38",
+    "ava": "3.15.0",
     "documentation-markdown-themes": "^12.1.5",
     "npm-run-all": "^4.1.5",
-    "puppeteer": "9",
+    "puppeteer": "^14.2.1",
     "puppeteer-extra-plugin": "^3.2.0",
     "puppeteer-extra-plugin-anonymize-ua": "^2.3.3",
-    "puppeteer-firefox": "^0.5.0",
     "rimraf": "^3.0.0",
     "rollup": "^1.27.5",
     "rollup-plugin-commonjs": "^10.1.0",
@@ -56,17 +59,12 @@
     "rollup-plugin-sourcemaps": "^0.4.2",
     "rollup-plugin-typescript2": "^0.25.2",
     "ts-node": "^8.5.4",
-    "tslint": "^5.20.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-config-standard": "^9.0.0",
-    "typescript": "4.4.3"
+    "typescript": "^4.4.3"
   },
   "peerDependencies": {
     "puppeteer": "*"
   },
   "dependencies": {
-    "@types/debug": "^4.1.0",
-    "@types/puppeteer": "*",
     "debug": "^4.1.1",
     "deepmerge": "^4.2.2"
   },

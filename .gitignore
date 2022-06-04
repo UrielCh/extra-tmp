@@ -33,4 +33,22 @@ packages/internal-testing-*
 testing/
 
 *.tgz*
-
+**/*.map
+.vscode/launch.json
+packages/puppeteer-extra-plugin-stealth/index.js
+packages/puppeteer-extra-plugin-stealth/evasions/*/index.js
+packages/puppeteer-extra-plugin-stealth/evasions/*/*.d.ts
+packages/puppeteer-extra-plugin-stealth/evasions/_utils/withUtils.js
+packages/puppeteer-extra-plugin-stealth/evasions/navigator.plugins/magicArray.js
+packages/puppeteer-extra-plugin-stealth/evasions/navigator.plugins/mimeTypes.js
+packages/puppeteer-extra-plugin-stealth/evasions/navigator.plugins/plugins.js
+packages/puppeteer-extra-plugin-stealth/evasions/navigator.plugins/functionMocks.js
+packages/puppeteer-extra-plugin-stealth/evasions/chrome.app/index.test.js
+packages/puppeteer-extra-plugin-stealth/evasions/chrome.runtime/index.test.js
+packages/puppeteer-extra-plugin-recaptcha/package-lock.json
+packages/puppeteer-extra-plugin-stealth/index.test.js
+packages/puppeteer-extra-plugin-stealth/index.test.d.ts
+packages/puppeteer-extra-plugin-stealth/index.d.ts
+packages/puppeteer-extra-plugin-stealth/test/*.js
+packages/puppeteer-extra-plugin-stealth/test/*.d.ts
+.vscode/settings.json

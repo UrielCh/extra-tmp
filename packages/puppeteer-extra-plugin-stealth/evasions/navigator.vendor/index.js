@@ -1,9 +1,10 @@
-'use strict'
-
-const { PuppeteerExtraPlugin } = require('puppeteer-extra-plugin')
-
-const withUtils = require('../_utils/withUtils')
-
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const puppeteer_extra_plugin_1 = require("puppeteer-extra-plugin");
+const withUtils_1 = __importDefault(require("../_utils/withUtils"));
 /**
  * By default puppeteer will have a fixed `navigator.vendor` property.
  *
@@ -27,40 +28,28 @@ const withUtils = require('../_utils/withUtils')
  * @param {string} [opts.vendor] - The vendor to use in `navigator.vendor` (default: `Google Inc.`)
  *
  */
-class Plugin extends PuppeteerExtraPlugin {
-  constructor(opts = {}) {
-    super(opts)
-  }
-
-  get name() {
-    return 'stealth/evasions/navigator.vendor'
-  }
-
-  get defaults() {
-    return {
-      vendor: 'Google Inc.'
+class NavigatorVendorPlugin extends puppeteer_extra_plugin_1.PuppeteerExtraPlugin {
+    constructor(opts) {
+        super(opts);
     }
-  }
-
-  async onPageCreated(page) {
-    this.debug('onPageCreated', {
-      opts: this.opts
-    })
-
-    await withUtils(page).evaluateOnNewDocument(
-      (utils, { opts }) => {
-        utils.replaceGetterWithProxy(
-          Object.getPrototypeOf(navigator),
-          'vendor',
-          utils.makeHandler().getterValue(opts.vendor)
-        )
-      },
-      {
-        opts: this.opts
-      }
-    )
-  } // onPageCreated
+    get name() {
+        return 'stealth/evasions/navigator.vendor';
+    }
+    get defaults() {
+        return {
+            vendor: 'Google Inc.'
+        };
+    }
+    async onPageCreated(page) {
+        this.debug('onPageCreated', {
+            opts: this.opts
+        });
+        await (0, withUtils_1.default)(page).evaluateOnNewDocument((utils, { opts }) => {
+            utils.replaceGetterWithProxy(Object.getPrototypeOf(navigator), 'vendor', utils.makeHandler().getterValue(opts.vendor));
+        }, {
+            opts: this.opts
+        });
+    } // onPageCreated
 }
-
-const defaultExport = opts => new Plugin(opts)
-module.exports = defaultExport
+exports.default = (pluginConfig) => new NavigatorVendorPlugin(pluginConfig);
+//# sourceMappingURL=index.js.map
