@@ -80,19 +80,21 @@ test('should have the internal class members', async t => {
   t.true(instance._hasChildClassMember instanceof Function)
 })
 
+interface UserOpts { foo:string, foo2: string, extra2: number, extra1: number };
+
 test('should merge opts with defaults automatically', async t => {
   const pluginName = 'hello-world'
-  const pluginDefaults = { foo: 'bar', foo2: 'bar2', extra1: 123 }
-  const userOpts = { foo2: 'bob', extra2: 666 }
+  const pluginDefaults: UserOpts = { foo: 'bar', foo2: 'bar2', extra1: 123, extra2: 456 }
+  const userOpts: Partial<UserOpts> = { foo2: 'bob', extra2: 666 }
 
-  class Plugin extends PuppeteerExtraPlugin {
+  class Plugin extends PuppeteerExtraPlugin<UserOpts> {
     constructor(opts = {}) {
       super(opts)
     }
     get name() {
       return pluginName
     }
-    get defaults() {
+    get defaults(): UserOpts {
       return pluginDefaults
     }
   }
@@ -109,7 +111,7 @@ test('should have opts when defaults is not defined', async t => {
   const pluginName = 'hello-world'
   const userOpts = { foo2: 'bob', extra2: 666 }
 
-  class Plugin extends PuppeteerExtraPlugin {
+  class Plugin extends PuppeteerExtraPlugin<{foo2: string, extra2: number}> {
     constructor(opts = {}) {
       super(opts)
     }
