@@ -1,5 +1,6 @@
 import test from 'ava'
 import { EventEmitter } from 'puppeteer'
+declare const require: any;
 
 const PUPPETEER_ARGS: string[] = ['--no-sandbox', '--disable-setuid-sandbox']
 

@@ -1,4 +1,5 @@
 import test from 'ava'
+declare const require: any;
 
 const PUPPETEER_ARGS: string[] = ['--no-sandbox', '--disable-setuid-sandbox']
 
