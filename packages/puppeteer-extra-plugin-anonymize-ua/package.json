@@ -18,6 +18,7 @@
     "lint": "eslint --ext .js .",
     "test:js": "ava -v --serial --concurrency 1 --fail-fast",
     "test:ts": "ava -v --serial --concurrency 1 --fail-fast --config ava.config-ts.js",
+    "test": "node -e 0",
     "test_disabled": "run-p test:ts",
     "pretest-ci": "run-s build",
     "test-ci": "run-s test"
