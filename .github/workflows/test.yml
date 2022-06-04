@@ -64,16 +64,14 @@ jobs:
       - name: 'Configuration for puppeteer ${{ matrix.puppeteer_version }}'
         run: yarn lerna add --dev puppeteer@${{ matrix.puppeteer_version }}
 
-      - name: yarn install
-        uses: bahmutov/npm-install@v1
-        with:
-          working-directory: packages/puppeteer-extra
-
       - name: yarn bootstrap
         run: yarn bootstrap
 
       - name: lerna link
         run: yarn lerna link
+
+      - name: build puppeteer-extra first
+        run: yarn lerna run build --scope puppeteer-extra
 
       - name: lerna build
         run: yarn lerna run build --concurrency 1
