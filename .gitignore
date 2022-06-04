@@ -51,3 +51,4 @@ packages/puppeteer-extra-plugin-stealth/index.test.d.ts
 packages/puppeteer-extra-plugin-stealth/index.d.ts
 packages/puppeteer-extra-plugin-stealth/test/*.js
 packages/puppeteer-extra-plugin-stealth/test/*.d.ts
+.vscode/settings.json

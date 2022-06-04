@@ -1,50 +1,13 @@
 /// <reference path="./puppeteer-legacy.d.ts" />
-import { PuppeteerNode, Browser, Page } from 'puppeteer'
+import { Browser } from 'puppeteer'
+import { VanillaPuppeteer, PuppeteerLaunchOption, BrowserEventOptions, PuppeteerExtraPlugin, BrowserInternals } from './deps';
+export { VanillaPuppeteer, PuppeteerLaunchOption, BrowserEventOptions, PuppeteerExtraPlugin } from './deps';
+
 
 import Debug from 'debug'
 const debug = Debug('puppeteer-extra')
 
 import merge from 'deepmerge'
-
-/**
- * Original Puppeteer API
- * @private
- */
-export interface VanillaPuppeteer
-  extends Pick<
-    PuppeteerNode,
-    | 'connect'
-    | 'defaultArgs'
-    | 'executablePath'
-    | 'launch'
-    | 'createBrowserFetcher'
-  > {}
-
-export declare type PuppeteerLaunchOption = Parameters<VanillaPuppeteer['launch']>[0];
-
-export interface BrowserEventOptions {
-  context: 'launch' | 'connect';
-  options: PuppeteerLaunchOption;
-  defaultArgs?: (options?: Parameters<VanillaPuppeteer['defaultArgs']>[0]) => ReturnType<VanillaPuppeteer['defaultArgs']>
-}
-
-
-/**
- * Minimal plugin interface
- * @private
- */
-export interface PuppeteerExtraPlugin {
-  _isPuppeteerExtraPlugin: boolean
-  [propName: string]: any
-}
-
-/**
- * We need to hook into non-public APIs in rare occasions to fix puppeteer bugs. :(
- * @private
- */
-interface BrowserInternals extends Browser {
-  _createPageInContext(contextId?: string): Promise<Page>
-}
 
 /**
  * Modular plugin framework to teach `puppeteer` new tricks.
@@ -368,9 +331,12 @@ export class PuppeteerExtra implements VanillaPuppeteer {
       // In case a module sub resource is requested print out the main package name
       // e.g. puppeteer-extra-plugin-stealth/evasions/console.debug => puppeteer-extra-plugin-stealth
       const packageName = name.split('/')[0]
-      let dep = null
+      let dep: PuppeteerExtraPlugin | null = null
       try {
         const req = require(name);
+        
+        // TODO add pluginOption injection HERE!
+
         // use default export if available
         if ('default' in req) {
           dep = req.default()
@@ -380,7 +346,8 @@ export class PuppeteerExtra implements VanillaPuppeteer {
         // Try to require and instantiate the stated dependency
         // dep = require(name)()
         // Register it with `puppeteer-extra` as plugin
-        this.use(dep)
+        if (dep)
+          this.use(dep)
       } catch (err) {
         console.warn(`
           A plugin listed '${name}' as dependency,
@@ -394,7 +361,7 @@ export class PuppeteerExtra implements VanillaPuppeteer {
         throw err
       }
       // Handle nested dependencies :D
-      if (dep.dependencies.size) {
+      if (dep && dep.dependencies.size) {
         this.resolvePluginDependencies()
       }
     }
@@ -431,7 +398,8 @@ export class PuppeteerExtra implements VanillaPuppeteer {
    *
    * @private
    */
-  private checkPluginRequirements(opts = {} as any) {
+   private checkPluginRequirements(opts: BrowserEventOptions): void;
+   private checkPluginRequirements(opts = {} as { context: 'launch' | 'connect', options: any }): void {
     for (const plugin of this._plugins) {
       for (const requirement of plugin.requirements) {
         if (
