@@ -3,7 +3,7 @@ name: Extract stealth.min.js
 on:
   push:
     branches:
-      - master
+      - none
     paths:
       - "packages/puppeteer-extra-plugin-stealth/**"
 

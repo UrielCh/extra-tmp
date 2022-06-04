@@ -11,7 +11,6 @@ on:
   push:
     branches:
       - master
-      - 'test/*'
 
 env:
   CI: "true"
@@ -64,6 +63,11 @@ jobs:
 
       - name: 'Configuration for puppeteer ${{ matrix.puppeteer_version }}'
         run: yarn lerna add --dev puppeteer@${{ matrix.puppeteer_version }}
+
+      - name: yarn install
+        uses: bahmutov/npm-install@v1
+        with:
+          working-directory: packages/puppeteer-extra
 
       - name: yarn bootstrap
         run: yarn bootstrap
