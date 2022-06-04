@@ -23,12 +23,12 @@ export default {
       sourcemap: true,
       banner
     },
-    {
-      file: pkg.module,
-      format: 'es',
-      sourcemap: true,
-      banner
-    }
+    // {
+    //   file: pkg.module,
+    //   format: 'es',
+    //   sourcemap: true,
+    //   banner
+    // }
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
