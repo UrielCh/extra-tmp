@@ -18,7 +18,7 @@
     "lint": "eslint --ext .js .",
     "test:js": "ava -v --serial --concurrency 1 --fail-fast",
     "test:ts": "ava -v --serial --concurrency 1 --fail-fast --config ava.config-ts.js",
-    "test": "run-p test:ts",
+    "test_disabled": "run-p test:ts",
     "pretest-ci": "run-s build",
     "test-ci": "run-s test"
   },
@@ -48,6 +48,23 @@
   "dependencies": {
     "debug": "^4.1.1",
     "puppeteer-extra-plugin": "^3.2.0"
+  },
+  "ava_disabled": {
+    "files": [
+      "test/*.cts"
+    ],
+    "environmentVariables": {
+      "TS_NODE_COMPILER_OPTIONS": "{\"module\":\"commonjs\"}"
+    },
+    "verbose": true,
+    "require": [
+      "ts-node/register"
+    ],
+    "extensions": [
+      "ts",
+      "mts",
+      "cts"
+    ]
   },
   "gitHead": "babb041828cab50c525e0b9aab02d58f73416ef3"
 }
