@@ -4,7 +4,7 @@ import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 import { Page } from 'puppeteer'
 
-interface PluginOptions {
+export interface PluginOptions {
   languages: string[];
 }
 

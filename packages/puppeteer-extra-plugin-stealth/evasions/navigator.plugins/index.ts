@@ -10,7 +10,7 @@ import { generateFunctionMocks } from './functionMocks';
 
 const data = require('./data.json')
 
-interface PluginOptions {
+export interface PluginOptions {
 }
 /**
  * In headless mode `navigator.mimeTypes` and `navigator.plugins` are empty.

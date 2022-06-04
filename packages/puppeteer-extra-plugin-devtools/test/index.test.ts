@@ -1,6 +1,7 @@
 const PLUGIN_NAME = 'devtools'
 
 import test from 'ava'
+import { Browser } from 'puppeteer'
 
 import Plugin from '../src'
 
@@ -34,7 +35,7 @@ test('will throw without browser when creating a tunnel', async t => {
 
 test('will accept a browser when creating a tunnel', async t => {
   const instance = Plugin({ auth: { user: 'bob', pass: 'yup' } })
-  const fakeBrowser = { wsEndpoint: () => 'ws://foobar:1337' }
+  const fakeBrowser = { wsEndpoint: () => 'ws://foobar:1337' } as Browser;
   await instance.createTunnel(fakeBrowser)
   t.is(true, true)
 })

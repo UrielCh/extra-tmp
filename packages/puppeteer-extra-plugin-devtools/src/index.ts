@@ -1,8 +1,7 @@
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
-import * as RemoteDevTools from './lib/RemoteDevTools'
 import ow from 'ow'
 import { Browser, Page } from 'puppeteer';
-import { DevToolsTunnel } from './lib/RemoteDevTools'
+import { DevToolsTunnel, DevToolsLocal, DevToolsTunnelOptions } from './lib/RemoteDevTools'
 import crypto from 'crypto';
 
 export interface PluginOptions {
@@ -102,7 +101,7 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
    * // Browser 1's devtools frontend can be found at: https://devtools-tunnel-qe2t5rghme.localtunnel.me
    * // Browser 2's devtools frontend can be found at: https://devtools-tunnel-pp83sdi4jo.localtunnel.me
    */
-  async createTunnel(browser: Browser) {
+  async createTunnel(browser: Browser): Promise<DevToolsTunnel> {
     ow(browser, ow.object.hasKeys('wsEndpoint'))
 
     const wsEndpoint = (browser as any).wsEndpoint()
@@ -139,7 +138,7 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
    *   const tunnel = await devtools.createTunnel(browser)
    * })
    */
-  setAuthCredentials(user: string, pass: string) {
+  setAuthCredentials(user: string, pass: string): this {
     ow(user, ow.string.nonEmpty)
     ow(pass, ow.string.nonEmpty)
     this.opts.auth = { user, pass }
@@ -163,11 +162,11 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
    *   // => http://localhost:55952
    * })
    */
-  getLocalDevToolsUrl(browser: Browser) {
+  getLocalDevToolsUrl(browser: Browser): string {
     ow(browser, ow.object.hasKeys('wsEndpoint'))
 
     const wsEndpoint = (browser as any).wsEndpoint()
-    return new RemoteDevTools.DevToolsLocal(wsEndpoint).url
+    return new DevToolsLocal(wsEndpoint).url
   }
 
   /**
@@ -178,7 +177,7 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
    *
    * @ignore
    */
-  _printGeneratedPasswordWhenNotOverridden(url) {
+  _printGeneratedPasswordWhenNotOverridden(url: string): void {
     if (this.opts.auth.pass.length !== 40) {
       return
     }
@@ -202,8 +201,8 @@ class Plugin extends PuppeteerExtraPlugin<PluginOptions> {
  * The devtools tunnel for a browser instance.
  *
  */
-class Tunnel extends RemoteDevTools.DevToolsTunnel {
-  constructor(wsEndpoint: string, opts = {}) {
+class Tunnel extends DevToolsTunnel {
+  constructor(wsEndpoint: string, opts?: Partial<DevToolsTunnelOptions>) {
     super(wsEndpoint, opts)
   }
 
@@ -217,7 +216,7 @@ class Tunnel extends RemoteDevTools.DevToolsTunnel {
    * console.log(tunnel.url)
    * // => https://devtools-tunnel-sdoqqj95vg.localtunnel.me
    */
-  get url() {
+  get url(): string {
     return super.url
   }
 
@@ -233,7 +232,7 @@ class Tunnel extends RemoteDevTools.DevToolsTunnel {
    * console.log(tunnel.getUrlForPage(page))
    * // => https://devtools-tunnel-bmkjg26zmr.localtunnel.me/devtools/inspector.html?ws(...)
    */
-  getUrlForPage(page: Page) {
+  getUrlForPage(page: Page): string {
     ow(page, ow.object.hasKeys('_target._targetInfo.targetId'))
     const pageId = (page as any)._target._targetInfo.targetId
     return super.getUrlForPageId(pageId)
@@ -248,7 +247,7 @@ class Tunnel extends RemoteDevTools.DevToolsTunnel {
    * const tunnel = await devtools.createTunnel(browser)
    * tunnel.close()
    */
-  close() {
+  close(): this {
     return super.close()
   }
 }

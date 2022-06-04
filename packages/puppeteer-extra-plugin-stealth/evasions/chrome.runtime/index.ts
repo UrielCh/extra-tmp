@@ -5,7 +5,7 @@ import { Page } from 'puppeteer'
 
 const STATIC_DATA = require('./staticData.json')
 
-interface PluginOptions {
+export interface PluginOptions {
   runOnInsecureOrigins: boolean;
 }
 

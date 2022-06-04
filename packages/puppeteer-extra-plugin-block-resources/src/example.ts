@@ -15,7 +15,9 @@
 // })()
 
 import puppeteer from 'puppeteer-extra'
-const blockResourcesPlugin = require('puppeteer-extra-plugin-block-resources')()
+import BlockResourcesPlugin from './index';
+
+const blockResourcesPlugin = BlockResourcesPlugin();
 
 puppeteer.use(blockResourcesPlugin)
 ;(async () => {

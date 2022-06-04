@@ -1,7 +1,8 @@
 import { CDPSession, Page } from 'puppeteer'
 import { PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 
-interface PluginOptions {}
+export interface PluginOptions {
+}
 
 /**
  * Strip sourceURL from scripts injected by puppeteer.

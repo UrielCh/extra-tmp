@@ -1,8 +1,7 @@
 import { CDPSession, Page } from 'puppeteer';
 import { PluginData, PluginDependencies, PuppeteerExtraPlugin, PuppeteerLaunchOption } from 'puppeteer-extra-plugin'
 
-
-interface PluginOptions {
+export interface PluginOptions {
   userAgent: string | null,
   locale: string,
   maskLinux: boolean,

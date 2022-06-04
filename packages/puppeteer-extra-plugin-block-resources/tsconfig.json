@@ -2,7 +2,7 @@
   "compilerOptions": {
     "outDir": "./dist",
     "target": "es2017",
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["es2015", "es2016", "es2017", "dom"],
     "sourceMap": true,
@@ -21,9 +21,6 @@
     "types": ["node"]
   },
   "include": [
-    "./src/**/*.tsx",
-    "./src/**/*.ts",
-    "./test/**/*.ts"
+    "./src/*.ts",
   ],
-  "exclude": ["node_modules", "dist", "./test/**/*.ts"]
 }

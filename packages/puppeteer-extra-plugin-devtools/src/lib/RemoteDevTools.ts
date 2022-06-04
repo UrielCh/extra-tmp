@@ -28,7 +28,7 @@ export class DevToolsCommon {
   public wsHost: string
   public wsPort: string
 
-  constructor(webSocketDebuggerUrl: string, opts = {} as Partial<DevToolsTunnelOptions>) {
+  constructor(webSocketDebuggerUrl: string, opts: Partial<DevToolsTunnelOptions> = {}) {
     ow(webSocketDebuggerUrl, ow.string)
     ow(webSocketDebuggerUrl, ow.string.includes('ws://'))
     ow(opts, ow.object.plain)
@@ -73,7 +73,7 @@ export class DevToolsLocal extends DevToolsCommon {
 }
 
 
-interface DevToolsTunnelOptions {
+export interface DevToolsTunnelOptions {
   prefix: string;
   subdomain: string | null;
   auth: { user: string | null, pass: string | null };
@@ -119,7 +119,7 @@ export class DevToolsTunnel extends DevToolsCommon {
     }
   }
 
-  get url() {
+  get url(): string {
     return this.tunnel.url
   }
 

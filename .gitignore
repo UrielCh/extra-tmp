@@ -33,7 +33,7 @@ packages/internal-testing-*
 testing/
 
 *.tgz*
-
+**/*.map
 packages/puppeteer-extra-plugin-stealth/evasions/window.outerdimensions/index.js
 packages/puppeteer-extra-plugin-stealth/evasions/webgl.vendor/index.js
 packages/puppeteer-extra-plugin-stealth/evasions/user-agent-override/index.js
@@ -67,3 +67,17 @@ packages/puppeteer-extra-plugin-stealth/test/cat-and-mouse.test.js
 packages/puppeteer-extra-plugin-stealth/test/fpscanner.test.js
 packages/puppeteer-extra-plugin-stealth/test/service-worker.test.js
 .vscode/launch.json
+packages/puppeteer-extra-plugin-stealth/evasions/*/index.d.ts
+packages/puppeteer-extra-plugin-stealth/index.test.d.ts
+packages/puppeteer-extra-plugin-stealth/index.d.ts
+packages/puppeteer-extra-plugin-stealth/evasions/_utils/withUtils.d.ts
+packages/puppeteer-extra-plugin-stealth/evasions/chrome.runtime/index.test.d.ts
+packages/puppeteer-extra-plugin-stealth/evasions/navigator.plugins/plugins.d.ts
+packages/puppeteer-extra-plugin-stealth/evasions/navigator.plugins/mimeTypes.d.ts
+packages/puppeteer-extra-plugin-stealth/evasions/navigator.plugins/magicArray.d.ts
+packages/puppeteer-extra-plugin-stealth/evasions/navigator.plugins/functionMocks.d.ts
+packages/puppeteer-extra-plugin-stealth/test/service-worker.test.d.ts
+packages/puppeteer-extra-plugin-stealth/test/fpscanner.test.d.ts
+packages/puppeteer-extra-plugin-stealth/test/util.d.ts
+packages/puppeteer-extra-plugin-stealth/test/cat-and-mouse.test.d.ts
+packages/puppeteer-extra-plugin-stealth/evasions/chrome.app/index.test.d.ts

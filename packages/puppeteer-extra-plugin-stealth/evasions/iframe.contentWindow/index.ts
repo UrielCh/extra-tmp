@@ -3,7 +3,7 @@ import { Page } from 'puppeteer'
 import { PluginRequirements, PuppeteerExtraPlugin } from 'puppeteer-extra-plugin'
 import withUtils from '../_utils/withUtils'
 
-interface PluginOptions {
+export interface PluginOptions {
 }
 
 /**
