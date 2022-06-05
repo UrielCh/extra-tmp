@@ -73,6 +73,9 @@ jobs:
       - name: build puppeteer-extra first
         run: yarn lerna run build --scope puppeteer-extra
 
+      - name: build puppeteer-extra-plugin 2nd
+        run: yarn lerna run build --scope puppeteer-extra-plugin
+
       - name: lerna build
         run: yarn lerna run build --concurrency 1
 

@@ -29,13 +29,13 @@ export default {
       outro: defaultExportOutro,
       banner
     },
-    // {
-    //   file: pkg.module,
-    //   format: 'es',
-    //   sourcemap: true,
-    //   exports: 'named',
-    //   banner
-    // }
+    {
+      file: pkg.module,
+      format: 'es',
+      sourcemap: true,
+      exports: 'named',
+      banner
+    }
   ],
   // Indicate here external modules you don't wanna include in your bundle (i.e.: 'lodash')
   external: [
