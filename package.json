@@ -23,6 +23,8 @@
       "packages/*"
     ],
     "nohoist": [
+      "**/@typescript-eslint",
+      "**/@typescript-eslint/**",
       "**/@types",
       "**/@types/**",
       "**/typescript",

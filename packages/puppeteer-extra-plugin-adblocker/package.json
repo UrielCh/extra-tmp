@@ -26,7 +26,7 @@
     "test": "run-p test:ts",
     "pretest-ci": "run-s build",
     "test-ci-back": "ava --concurrency 1 --serial --fail-fast -v",
-    "test-ci": "run-s test"
+    "test-ci": "run-s docs"
   },
   "engines": {
     "node": ">=10"

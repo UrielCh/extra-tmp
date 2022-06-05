@@ -13,7 +13,7 @@
     "build:tsc": "tsc --module commonjs",
     "docs": "node -e 0",
     "lint": "eslint *.ts",
-    "test": "run-p lint",
+    "test": "run-p docs",
     "test-ci": "run-s test"
   },
   "engines": {
